@@ -1,6 +1,6 @@
 package br.com.corteAqui.backend.models;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,6 +11,7 @@ import java.util.List;
 @Table(name = "tb_barbeiros")
 @Data
 public class Barbeiro {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +22,7 @@ public class Barbeiro {
     @Column(nullable = false)
     private String sobreNome;
 
-    @Column(nullable = false, unique = true,length = 14)
+    @Column(nullable = false, unique = true, length = 14)
     private String cpf;
 
     @OneToOne
@@ -32,6 +33,6 @@ public class Barbeiro {
     private List<Servicos> servicos = new ArrayList<>();
 
     @OneToMany(mappedBy = "barbeiro")
+    @JsonIgnore
     private List<Horario> horarios = new ArrayList<>();
-
 }
