@@ -1,3 +1,4 @@
+
 package br.com.corteAqui.backend.services;
 
 import br.com.corteAqui.backend.enums.StatusHorario;
@@ -58,7 +59,10 @@ public class HorarioService {
     }
 
     public List<Horario> listarPorBarbeiro(Long barbeiroId) {
-        return horarioRepository.findByBarbeiroId(barbeiroId);
+        return horarioRepository.findByBarbeiroIdAndStatusHorarioNot(
+                barbeiroId,
+                StatusHorario.REMOVIDO
+        );
     }
 
     public Horario buscarPorId(Long horarioId, Long barbeiroId) {
@@ -71,7 +75,7 @@ public class HorarioService {
         ));
     }
 
-    public Horario editar(
+    public String editar(
             Long horarioId,
             Long barbeiroId,
             LocalDate novaData,
@@ -79,10 +83,10 @@ public class HorarioService {
     ) {
         Horario horario = buscarPorId(horarioId, barbeiroId);
 
-        if (agendamentoRepository.existsByHorarioId(horarioId)) {
+        if (horario.getStatusHorario() == StatusHorario.REMOVIDO) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Não é possível editar um horário que possui agendamento."
+                    "Não é possível editar um horário removido."
             );
         }
 
@@ -112,23 +116,41 @@ public class HorarioService {
             );
         }
 
+        boolean possuiAgendamento =
+                agendamentoRepository.existsByHorarioId(horarioId);
+
         horario.setDataHorario(dataFinal);
         horario.setHora(horaFinal);
 
-        return horarioRepository.save(horario);
+        horarioRepository.save(horario);
+
+        if (possuiAgendamento) {
+            return "Horário alterado com sucesso. O cliente deverá ser notificado para decidir se deseja manter ou cancelar o agendamento.";
+        }
+
+        return "Horário alterado com sucesso.";
     }
 
-    public void excluir(Long horarioId, Long barbeiroId) {
+    public String excluir(Long horarioId, Long barbeiroId) {
         Horario horario = buscarPorId(horarioId, barbeiroId);
 
-        if (agendamentoRepository.existsByHorarioId(horarioId)) {
+        if (horario.getStatusHorario() == StatusHorario.REMOVIDO) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Não é possível excluir um horário que possui agendamento."
+                    "Esse horário já foi removido."
             );
         }
 
+        if (agendamentoRepository.existsByHorarioId(horarioId)) {
+            horario.setStatusHorario(StatusHorario.REMOVIDO);
+            horarioRepository.save(horario);
+
+            return "Horário removido. O cliente deverá ser notificado para escolher outro horário.";
+        }
+
         horarioRepository.delete(horario);
+
+        return "Horário excluído com sucesso.";
     }
 
     private void validarDataHora(LocalDate data, Time hora) {

@@ -1,4 +1,3 @@
-
 package br.com.corteAqui.backend;
 
 import br.com.corteAqui.backend.enums.StatusHorario;
@@ -6,6 +5,7 @@ import br.com.corteAqui.backend.models.Barbeiro;
 import br.com.corteAqui.backend.models.Horario;
 import br.com.corteAqui.backend.models.Papel;
 import br.com.corteAqui.backend.models.Usuario;
+import br.com.corteAqui.backend.repositories.AgendamentoRepository;
 import br.com.corteAqui.backend.repositories.BarbeiroRepository;
 import br.com.corteAqui.backend.repositories.HorarioRepository;
 import br.com.corteAqui.backend.repositories.PapelRepository;
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -43,6 +45,9 @@ class HorarioServiceTest {
 
     @Autowired
     private HorarioService horarioService;
+
+    @MockitoBean
+    private AgendamentoRepository agendamentoRepository;
 
     private Barbeiro barbeiro;
 
@@ -108,13 +113,19 @@ class HorarioServiceTest {
         LocalDate novaData = LocalDate.now().plusDays(3);
         Time novaHora = Time.valueOf("16:00:00");
 
-        Horario atualizado = horarioService.editar(
+        String mensagem = horarioService.editar(
                 horario.getId(),
                 barbeiro.getId(),
                 novaData,
                 novaHora
         );
 
+        Horario atualizado = horarioService.buscarPorId(
+                horario.getId(),
+                barbeiro.getId()
+        );
+
+        assertEquals("Horário alterado com sucesso.", mensagem);
         assertEquals(novaData, atualizado.getDataHorario());
         assertEquals(novaHora, atualizado.getHora());
     }
@@ -159,5 +170,66 @@ class HorarioServiceTest {
                 ResponseStatusException.class,
                 () -> horarioService.cadastrar(horario)
         );
+    }
+
+    @Test
+    void deveEditarHorarioComAgendamento() {
+        Horario horario = criarHorario(
+                LocalDate.now().plusDays(1),
+                "14:00:00"
+        );
+
+        when(agendamentoRepository.existsByHorarioId(horario.getId()))
+                .thenReturn(true);
+
+        String mensagem = horarioService.editar(
+                horario.getId(),
+                barbeiro.getId(),
+                LocalDate.now().plusDays(2),
+                Time.valueOf("16:00:00")
+        );
+
+        assertEquals(
+                "Horário alterado com sucesso. O cliente deverá ser notificado para decidir se deseja manter ou cancelar o agendamento.",
+                mensagem
+        );
+
+        Horario atualizado = horarioService.buscarPorId(
+                horario.getId(),
+                barbeiro.getId()
+        );
+
+        assertEquals(LocalDate.now().plusDays(2), atualizado.getDataHorario());
+        assertEquals(Time.valueOf("16:00:00"), atualizado.getHora());
+    }
+
+    @Test
+    void deveRemoverHorarioComAgendamento() {
+        Horario horario = criarHorario(
+                LocalDate.now().plusDays(1),
+                "14:00:00"
+        );
+
+        when(agendamentoRepository.existsByHorarioId(horario.getId()))
+                .thenReturn(true);
+
+        String mensagem = horarioService.excluir(
+                horario.getId(),
+                barbeiro.getId()
+        );
+
+        assertEquals(
+                "Horário removido. O cliente deverá ser notificado para escolher outro horário.",
+                mensagem
+        );
+
+        assertTrue(horarioRepository.existsById(horario.getId()));
+
+        Horario removido = horarioService.buscarPorId(
+                horario.getId(),
+                barbeiro.getId()
+        );
+
+        assertEquals(StatusHorario.REMOVIDO, removido.getStatusHorario());
     }
 }

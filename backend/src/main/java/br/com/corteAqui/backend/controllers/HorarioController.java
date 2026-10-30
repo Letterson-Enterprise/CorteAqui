@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +82,7 @@ public class HorarioController {
             horario.setHora(
                     Time.valueOf(horaObjeto.toString())
             );
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | DateTimeParseException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "A data ou a hora está em formato inválido."
@@ -107,7 +108,7 @@ public class HorarioController {
     }
 
     @PutMapping("/{horarioId}/barbeiro/{barbeiroId}")
-    public ResponseEntity<Horario> editar(
+    public ResponseEntity<Map<String, String>> editar(
             @PathVariable Long horarioId,
             @PathVariable Long barbeiroId,
             @RequestBody Map<String, String> dados) {
@@ -115,33 +116,43 @@ public class HorarioController {
         LocalDate novaData = null;
         Time novaHora = null;
 
-        if (dados.containsKey("dataHorario")
-                && dados.get("dataHorario") != null) {
-            novaData = LocalDate.parse(dados.get("dataHorario"));
+        try {
+            if (dados.containsKey("dataHorario")
+                    && dados.get("dataHorario") != null) {
+                novaData = LocalDate.parse(dados.get("dataHorario"));
+            }
+
+            if (dados.containsKey("hora")
+                    && dados.get("hora") != null) {
+                novaHora = Time.valueOf(dados.get("hora"));
+            }
+
+        } catch (IllegalArgumentException | DateTimeParseException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "A data ou a hora está em formato inválido."
+            );
         }
 
-        if (dados.containsKey("hora")
-                && dados.get("hora") != null) {
-            novaHora = Time.valueOf(dados.get("hora"));
-        }
-
-        Horario horarioAtualizado = horarioService.editar(
+        String mensagem = horarioService.editar(
                 horarioId,
                 barbeiroId,
                 novaData,
                 novaHora
         );
 
-        return ResponseEntity.ok(horarioAtualizado);
+        return ResponseEntity.ok(Map.of("mensagem", mensagem));
     }
 
     @DeleteMapping("/{horarioId}/barbeiro/{barbeiroId}")
-    public ResponseEntity<Void> excluir(
+    public ResponseEntity<Map<String, String>> excluir(
             @PathVariable Long horarioId,
             @PathVariable Long barbeiroId) {
 
-        horarioService.excluir(horarioId, barbeiroId);
+        String mensagem = horarioService.excluir(horarioId, barbeiroId);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                Map.of("mensagem", mensagem)
+        );
     }
 }

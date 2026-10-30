@@ -3,6 +3,7 @@ package br.com.corteAqui.backend.repositories;
 import br.com.corteAqui.backend.models.Horario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import br.com.corteAqui.backend.enums.StatusHorario;
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -20,5 +21,10 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
             Long barbeiroId,
             LocalDate dataHorario,
             Time hora
+    );
+
+    List<Horario> findByBarbeiroIdAndStatusHorarioNot(
+            Long barbeiroId,
+            StatusHorario statusHorario
     );
 }
