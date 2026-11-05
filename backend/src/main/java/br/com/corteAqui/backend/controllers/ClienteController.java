@@ -41,4 +41,16 @@ public class ClienteController {
         usuarioService.atualizarUsuario(usuario.getId(), corpoUsuario.nomeUsuario());
         return ResponseEntity.ok("Usuário atualizado com sucesso.");
     }
+
+    @PutMapping("/editar/informacoes/cliente")
+    public ResponseEntity<String> atualizarCliente(@AuthenticationPrincipal Usuario usuario, @RequestBody ClienteRequestAtualizacaoDTO corpoCliente) {
+        clienteService.atualizarCliente(usuario.getId(), corpoCliente);
+        return ResponseEntity.ok("Cliente atualizado com sucesso.");
+    }
+
+    @PutMapping("/editar/informacoes/usuario")
+    public ResponseEntity<String> editarInformacoesUsuario(@AuthenticationPrincipal Usuario usuario, @RequestBody UsuarioRequestAtualizacaoDTO corpoUsuario) {
+        usuarioService.atualizarUsuario(usuario.getId(), corpoUsuario.nomeUsuario());
+        return ResponseEntity.ok("Usuário atualizado com sucesso.");
+    }
 }
