@@ -27,7 +27,7 @@ public class ClienteController {
     public ResponseEntity<String> cadastrarCliente(@RequestBody ClienteRequestDTO corpoCliente) {
         clienteService.cadastrarCliente(corpoCliente);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Usuario cadastrado com sucesso.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso.");
     }
 
     @PutMapping("/editar/informacoes/cliente")
