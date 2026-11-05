@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(HttpMethod.POST, "/autenticacao/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/clientes").permitAll()
+                                .requestMatchers("/clientes/**").hasAuthority("CLIENTE")
+                                .requestMatchers("/h2-console/**").permitAll()
                                 .anyRequest().authenticated()
                         )
                 .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class)

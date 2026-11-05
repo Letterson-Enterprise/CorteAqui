@@ -1,10 +1,13 @@
 package br.com.corteAqui.backend.dtos.request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public record ClienteRequestDTO(
-        String nome,
-        String sobreNome,
-        String nomeUsuario,
-        String email,
+        @NotBlank String nome,
+        @NotBlank String sobreNome,
+        @NotBlank String nomeUsuario,
+        @NotBlank @Email String email,
         String senha
 ) {
 }

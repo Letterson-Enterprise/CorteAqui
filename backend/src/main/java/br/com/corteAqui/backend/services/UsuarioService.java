@@ -5,12 +5,14 @@ import br.com.corteAqui.backend.exceptions.ExecaoInformacoesDuplicadas;
 import br.com.corteAqui.backend.models.Papel;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.repositories.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -61,9 +63,21 @@ public class UsuarioService {
                 usuarioExiste = true;
                 break;
             }
-            ;
         }
 
         return usuarioExiste;
+    }
+
+    @Transactional
+    public Usuario atualizarUsuario(Long id, String nomeUsuario) {
+        Usuario usuarioExistente = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado no sistema."));
+
+        if (nomeUsuario != null && !nomeUsuario.isBlank()) {
+            usuarioExistente.setNomeUsuario(nomeUsuario);
+        }
+
+
+        return usuarioRepository.save(usuarioExistente);
     }
 }

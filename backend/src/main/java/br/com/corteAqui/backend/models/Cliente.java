@@ -25,6 +25,6 @@ public class Cliente {
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<Agendamento> agendamentos = new ArrayList<>();
 }
