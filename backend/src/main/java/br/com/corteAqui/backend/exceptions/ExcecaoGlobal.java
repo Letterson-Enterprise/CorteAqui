@@ -30,4 +30,18 @@ public class ExcecaoGlobal {
         corpo.put(excecao.getMensagem(), excecao.getTipo());
         return ResponseEntity.badRequest().body(corpo);
     }
+
+    @ExceptionHandler(ExcecaoListaVazia.class)
+    public ResponseEntity<Map<String, String>> listaVazia(ExcecaoListaVazia excecao) {
+        Map<String, String> corpo = new HashMap<>();
+        corpo.put(excecao.getMensagem(), excecao.getTipo());
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(ExececaoNumerosInvalidos.class)
+    public ResponseEntity<Map<String, String>> numerosInvalidos(ExececaoNumerosInvalidos excecao) {
+        Map<String, String> corpo = new HashMap<>();
+        corpo.put(excecao.getMensagem(), excecao.getTipo());
+        return ResponseEntity.badRequest().body(corpo);
+    }
 }

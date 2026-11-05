@@ -2,6 +2,7 @@ package br.com.corteAqui.backend.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.engine.internal.Cascade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,6 @@ public class Categoria {
     @Column(nullable = false)
     private String descricao;
 
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Servicos> servicos = new ArrayList<>();
 }
