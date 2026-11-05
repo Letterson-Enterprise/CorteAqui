@@ -20,4 +20,8 @@ public class EmailService {
 
         emailRepository.save(novoEmail);
     }
+
+    public boolean verificarEmailExistente(String email) {
+        return emailRepository.existsByEmail(email);
+    }
 }

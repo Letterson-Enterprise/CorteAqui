@@ -28,10 +28,10 @@ public class Barbeiro {
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "barbeiro")
+    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER)
     private List<Servicos> servicos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "barbeiro")
+    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER)
     private List<Horario> horarios = new ArrayList<>();
 
 }
