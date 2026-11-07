@@ -1,9 +1,11 @@
 package br.com.corteAqui.backend.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "tb_servicos")
+@Data
 public class Servicos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +18,7 @@ public class Servicos {
     private double preco;
 
     @ManyToOne
-    @JoinColumn(name = "idCategoria",nullable = false)
+    @JoinColumn(name = "idCategoria", nullable = false)
     private Categoria categoria;
 
     @ManyToOne

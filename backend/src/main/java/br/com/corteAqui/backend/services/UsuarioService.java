@@ -38,9 +38,10 @@ public class UsuarioService {
         novoUsuario.setSenha(passwordEncoder.encode(senha));
         Papel papelUsuario = papelService.encontrarPapel(idPapel);
         novoUsuario.setPapel(papelUsuario);
-        boolean usuarioExiste = verificarUsuarioExistente(novoUsuario);
+        boolean usuarioExiste = usuarioRepository.existsByNomeUsuario(novoUsuario.getNomeUsuario());
+        boolean emailExiste = emailService.verificarEmailExistente(email);
 
-        if (usuarioExiste) {
+        if (usuarioExiste && emailExiste) {
             throw new ExecaoInformacoesDuplicadas("Já existe um usuário com nome de usuario, email ou senha iguais", "ERROR");
         }
 
@@ -51,19 +52,4 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-    public boolean verificarUsuarioExistente(Usuario usuario) {
-        List<Usuario> todosUsuarios = usuarioRepository.findAll();
-        boolean usuarioExiste = false;
-        for (Usuario usuarioNaLista : todosUsuarios) {
-            if (usuario.getNomeUsuario().equals(usuarioNaLista.getNomeUsuario()) ||
-                    usuario.getEmails().equals(usuarioNaLista.getEmails()) ||
-                    usuario.getSenha().equals(usuarioNaLista.getSenha())) {
-                usuarioExiste = true;
-                break;
-            }
-            ;
-        }
-
-        return usuarioExiste;
-    }
 }
