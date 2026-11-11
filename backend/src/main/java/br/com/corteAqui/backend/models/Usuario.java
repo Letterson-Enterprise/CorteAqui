@@ -24,7 +24,7 @@ public class Usuario implements UserDetails {
     @Column(nullable = false, unique = true)
     private String senha;
 
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private List<Email> emails = new ArrayList<>();
 
     @ManyToOne

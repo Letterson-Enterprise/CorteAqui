@@ -1,6 +1,6 @@
-# ✂️ Corte Aqui
-
 <div align="center">
+
+# ✂️ Corte Aqui
 
 ### Sistema de Agendamento para Barbeiros Autônomos
 

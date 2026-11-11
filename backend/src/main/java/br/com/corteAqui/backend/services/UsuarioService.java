@@ -2,6 +2,7 @@ package br.com.corteAqui.backend.services;
 
 import br.com.corteAqui.backend.exceptions.ExcecaoCamposInvalidos;
 import br.com.corteAqui.backend.exceptions.ExecaoInformacoesDuplicadas;
+import br.com.corteAqui.backend.exceptions.RecursoNaoEncontradoExcecao;
 import br.com.corteAqui.backend.models.Papel;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.repositories.UsuarioRepository;
@@ -30,9 +31,6 @@ public class UsuarioService {
     @Transactional
     public Usuario cadastrarUsuario(String nomeUsuario, String senha, String email, Long idPapel) {
         Usuario novoUsuario = new Usuario();
-        if (nomeUsuario.isBlank() || senha.isBlank() || email.isBlank()) {
-            throw new ExcecaoCamposInvalidos("Todos os campos devem ser preenchidos", "ERROR");
-        }
 
         novoUsuario.setNomeUsuario(nomeUsuario);
         novoUsuario.setSenha(passwordEncoder.encode(senha));
