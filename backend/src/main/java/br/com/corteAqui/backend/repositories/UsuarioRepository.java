@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<UserDetails> findByNomeUsuario(String nomeUsuario);
-
-    List<Usuario> id(Long id);
 }
