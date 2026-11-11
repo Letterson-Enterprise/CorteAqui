@@ -2,17 +2,16 @@ package br.com.corteAqui.backend.services;
 
 import br.com.corteAqui.backend.exceptions.ExcecaoCamposInvalidos;
 import br.com.corteAqui.backend.exceptions.ExecaoInformacoesDuplicadas;
+import br.com.corteAqui.backend.exceptions.RecursoNaoEncontradoExcecao;
 import br.com.corteAqui.backend.models.Papel;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.repositories.UsuarioRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -32,18 +31,14 @@ public class UsuarioService {
     @Transactional
     public Usuario cadastrarUsuario(String nomeUsuario, String senha, String email, Long idPapel) {
         Usuario novoUsuario = new Usuario();
-        if (nomeUsuario.isBlank() || senha.isBlank() || email.isBlank()) {
-            throw new ExcecaoCamposInvalidos("Todos os campos devem ser preenchidos", "ERROR");
-        }
 
         novoUsuario.setNomeUsuario(nomeUsuario);
         novoUsuario.setSenha(passwordEncoder.encode(senha));
-        Papel papelUsuario = papelService.encontrarPapel(idPapel);
-        novoUsuario.setPapel(papelUsuario);
-        boolean usuarioExiste = verificarUsuarioExistente(novoUsuario);
+        novoUsuario.setPapel(papelService.encontrarPapel(idPapel));
 
+        boolean usuarioExiste = verificarUsuarioExistente(novoUsuario);
         if (usuarioExiste) {
-            throw new ExecaoInformacoesDuplicadas("Já existe um usuário com nome de usuario, email ou senha iguais", "ERROR");
+            throw new ExecaoInformacoesDuplicadas("Já existe um usuário com nome de usuário, email ou senha iguais", "ERROR");
         }
 
         novoUsuario = usuarioRepository.save(novoUsuario);
@@ -69,15 +64,10 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario atualizarUsuario(Long id, String nomeUsuario) {
+    public void atualizarUsuario(Long id, String nomeUsuario) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado no sistema."));
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Usuário não encontrado no sistema.", "ERROR"));
 
-        if (nomeUsuario != null && !nomeUsuario.isBlank()) {
-            usuarioExistente.setNomeUsuario(nomeUsuario);
-        }
-
-
-        return usuarioRepository.save(usuarioExistente);
+        usuarioRepository.save(usuarioExistente);
     }
 }
