@@ -117,6 +117,8 @@ Para preparar o ambiente de desenvolvimento, serão necessários:
 - PostgreSQL instalado e configurado.
 - Maven ou Maven Wrapper para o back-end.
 - Git para obter o código-fonte do projeto.
+- Docker
+- Docker Compose
 
 ### 1. Obter o código-fonte
 
@@ -132,6 +134,29 @@ Substitua os valores entre os sinais de menor e maior pelas informações do rep
 ### 2. Configurar o banco de dados
 
 Instale e inicie o PostgreSQL. Após a implementação da aplicação, configure as credenciais de acesso e os parâmetros de conexão no back-end, utilizando as configurações definidas para o ambiente de execução.
+
+### 2.1 Executar docker compose para Base de dados
+
+Caso não queira instalar e configurar uma base de dados postgreSQL, utilize o docker compose na raiz do projeto para ter uma base de dados postgreSQL e a ferramenta PgAdmin para banco de dados. Execute o comando abaixo na raiz do projeto.
+
+```bash
+docker compose up -d
+```
+
+### 2.2 Acessos para as aplicações vindas do docker
+1. Usuario do banco: postgres
+2. Senha do banco: 1234567
+3. E-mail para acesso ao PgAdmin: me@example.com
+4. Senha para acesso ao PgAdmin: 1234567
+5. Nome do banco de dados: CorteAquiDB
+
+### 2.3 Portas de funcionamento das aplicações vindas do docker
+
+1. PostgreSQL: 5433
+2. PgAdmin: 5050
+
+### 2.4 Acesso ao PgAdmin
+Configure a conexão do pgAdmin usando o host pg-docker e usar as credenciais e e portas mostradas.
 
 ### 3. Executar o back-end
 

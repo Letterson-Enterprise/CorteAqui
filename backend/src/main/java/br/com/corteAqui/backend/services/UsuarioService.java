@@ -34,11 +34,13 @@ public class UsuarioService {
 
         novoUsuario.setNomeUsuario(nomeUsuario);
         novoUsuario.setSenha(passwordEncoder.encode(senha));
-        novoUsuario.setPapel(papelService.encontrarPapel(idPapel));
+        Papel papelUsuario = papelService.encontrarPapel(idPapel);
+        novoUsuario.setPapel(papelUsuario);
+        boolean usuarioExiste = usuarioRepository.existsByNomeUsuario(novoUsuario.getNomeUsuario());
+        boolean emailExiste = emailService.verificarEmailExistente(email);
 
-        boolean usuarioExiste = verificarUsuarioExistente(novoUsuario);
-        if (usuarioExiste) {
-            throw new ExecaoInformacoesDuplicadas("Já existe um usuário com nome de usuário, email ou senha iguais", "ERROR");
+        if (usuarioExiste && emailExiste) {
+            throw new ExecaoInformacoesDuplicadas("Já existe um usuário com nome de usuario, email ou senha iguais", "ERROR");
         }
 
         novoUsuario = usuarioRepository.save(novoUsuario);
@@ -47,27 +49,21 @@ public class UsuarioService {
 
         return novoUsuario;
     }
-
-    public boolean verificarUsuarioExistente(Usuario usuario) {
-        List<Usuario> todosUsuarios = usuarioRepository.findAll();
-        boolean usuarioExiste = false;
-        for (Usuario usuarioNaLista : todosUsuarios) {
-            if (usuario.getNomeUsuario().equals(usuarioNaLista.getNomeUsuario()) ||
-                    usuario.getEmails().equals(usuarioNaLista.getEmails()) ||
-                    usuario.getSenha().equals(usuarioNaLista.getSenha())) {
-                usuarioExiste = true;
-                break;
-            }
-        }
-
-        return usuarioExiste;
-    }
-
+    // Alteração feita porque o projeto não estava compilando
+    // Metodo adicionado para atender à chamada existente no ClienteController.
     @Transactional
     public void atualizarUsuario(Long id, String nomeUsuario) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Usuário não encontrado no sistema.", "ERROR"));
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao(
+                        "Usuário não encontrado no sistema.", "ERROR"));
 
+        if (usuarioRepository.existsByNomeUsuario(nomeUsuario)
+                && !usuarioExistente.getNomeUsuario().equals(nomeUsuario)) {
+            throw new ExecaoInformacoesDuplicadas(
+                    "Já existe um usuário com esse nome de usuário.", "ERROR");
+        }
+
+        usuarioExistente.setNomeUsuario(nomeUsuario);
         usuarioRepository.save(usuarioExistente);
     }
 }
