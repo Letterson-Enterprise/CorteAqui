@@ -49,5 +49,21 @@ public class UsuarioService {
 
         return novoUsuario;
     }
+    // Alteração feita porque o projeto não estava compilando
+    // Metodo adicionado para atender à chamada existente no ClienteController.
+    @Transactional
+    public void atualizarUsuario(Long id, String nomeUsuario) {
+        Usuario usuarioExistente = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao(
+                        "Usuário não encontrado no sistema.", "ERROR"));
 
+        if (usuarioRepository.existsByNomeUsuario(nomeUsuario)
+                && !usuarioExistente.getNomeUsuario().equals(nomeUsuario)) {
+            throw new ExecaoInformacoesDuplicadas(
+                    "Já existe um usuário com esse nome de usuário.", "ERROR");
+        }
+
+        usuarioExistente.setNomeUsuario(nomeUsuario);
+        usuarioRepository.save(usuarioExistente);
+    }
 }
