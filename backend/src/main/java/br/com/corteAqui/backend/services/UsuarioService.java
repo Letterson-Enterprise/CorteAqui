@@ -1,6 +1,5 @@
 package br.com.corteAqui.backend.services;
 
-import br.com.corteAqui.backend.exceptions.ExcecaoCamposInvalidos;
 import br.com.corteAqui.backend.exceptions.ExecaoInformacoesDuplicadas;
 import br.com.corteAqui.backend.exceptions.RecursoNaoEncontradoExcecao;
 import br.com.corteAqui.backend.models.Papel;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -49,8 +46,7 @@ public class UsuarioService {
 
         return novoUsuario;
     }
-    // Alteração feita porque o projeto não estava compilando
-    // Metodo adicionado para atender à chamada existente no ClienteController.
+
     @Transactional
     public void atualizarUsuario(Long id, String nomeUsuario) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
