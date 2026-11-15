@@ -5,6 +5,7 @@ import br.com.corteAqui.backend.dtos.response.CategoriaResponseDTO;
 import br.com.corteAqui.backend.dtos.response.ServicoResponseDTO;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.services.ServicosService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,7 @@ public class ServicoController {
     }
 
     @PostMapping
-    public ResponseEntity<String> cadastrarServico(@RequestBody ServicoRequestDTO corpoServicoRequisicao, @AuthenticationPrincipal Usuario usuarioAtivo) {
-        System.out.println(usuarioAtivo.getPapel());
-        System.out.println(usuarioAtivo.getId());
-        System.out.println(usuarioAtivo.getAuthorities());
-        System.out.println(usuarioAtivo.getNomeUsuario());
+    public ResponseEntity<String> cadastrarServico(@RequestBody @Valid ServicoRequestDTO corpoServicoRequisicao, @AuthenticationPrincipal Usuario usuarioAtivo) {
         servicosService.cadastrarServico(corpoServicoRequisicao, usuarioAtivo.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body("Serviço cadastrada com sucesso.");
     }
@@ -42,7 +39,7 @@ public class ServicoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ServicoResponseDTO> atualizarServico(@RequestBody ServicoRequestDTO novosDadosServico, @PathVariable Long id, @AuthenticationPrincipal Usuario usuarioAtivo) {
+    public ResponseEntity<ServicoResponseDTO> atualizarServico(@RequestBody @Valid ServicoRequestDTO novosDadosServico, @PathVariable Long id, @AuthenticationPrincipal Usuario usuarioAtivo) {
         System.out.println(usuarioAtivo.getPapel());
         System.out.println(usuarioAtivo.getId());
         System.out.println(usuarioAtivo.getAuthorities());

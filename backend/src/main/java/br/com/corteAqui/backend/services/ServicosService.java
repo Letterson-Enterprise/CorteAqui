@@ -9,6 +9,7 @@ import br.com.corteAqui.backend.models.Servicos;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.repositories.BarbeiroRepository;
 import br.com.corteAqui.backend.repositories.ServicoRepository;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -29,14 +30,6 @@ public class ServicosService {
     private CategoriaService categoriaService;
 
     public void cadastrarServico(ServicoRequestDTO novoServico, Long idUsuarioLogado) {
-        if(novoServico.nomeServico().isBlank()) {
-            throw new ExcecaoCamposInvalidos("O campo nome deve ser preenchido", "Campo invalido");
-        }
-
-        if(novoServico.preco() < 0  || novoServico.idCategoria() < 0) {
-            throw new ExececaoNumerosInvalidos("Números negativos não são permitidos", "Números invalidso");
-        }
-
         boolean servicoExistente = servicoRepository.existsByNomeServico(novoServico.nomeServico());
 
         if(servicoExistente) {
@@ -62,6 +55,8 @@ public class ServicosService {
     public List<ServicoResponseDTO> listarTodosServicos(Long id) {
         List<ServicoResponseDTO> todosServicos = servicoRepository.listaDeServicosBarbeiro(id).stream().map(this::converterEmServicoResponseDTO).toList();
 
+        System.out.println(todosServicos);
+        System.out.println(id);
         if(todosServicos.isEmpty()) {
             throw new ExcecaoListaVazia("Não há serviços cadastrados", "Lista vazia");
         }
@@ -80,6 +75,8 @@ public class ServicosService {
 
         Servicos servicoBuscado = servicoRepository.encontrarServicoPorIdEBarbeiro(id, idBarbeiro).orElseThrow(() -> new RecursoNaoEncontradoExcecao("Serviço não encontrado", "Recurso não encontrado"));
 
+        System.out.println(servicoBuscado);
+
         return servicoBuscado;
     }
 
@@ -87,6 +84,11 @@ public class ServicosService {
         Servicos servicoBuscado = buscarServicoPorId(id, idUsuarioLogado);
 
         Servicos servicoExistente = servicoRepository.verficarSeNomeExisteEmOutraLinha(novosDadosServico.nomeServico(), servicoBuscado.getId());
+
+
+        if(servicoExistente != null) {
+            throw new ExecaoInformacoesDuplicadas("Já existe um serviço com o mesmo nome", "Informações duplicadas");
+        }
 
         servicoBuscado.setPreco(novosDadosServico.preco());
 
@@ -108,7 +110,11 @@ public class ServicosService {
     public void deletarServico(Long id, Long idUsuarioLogado) {
         Servicos servicoBuscado = buscarServicoPorId(id, idUsuarioLogado);
 
-        servicoRepository.delete(servicoBuscado);
+        if(servicoBuscado == null) {
+            throw new RecursoNaoEncontradoExcecao("Serviço não encontrado", "Recurso não encontrado");
+        }
+
+        servicoRepository.deletarServicoPorId(id);
     }
 
     public ServicoResponseDTO visualizarServico(Long id, Long idUsuarioLogado) {
