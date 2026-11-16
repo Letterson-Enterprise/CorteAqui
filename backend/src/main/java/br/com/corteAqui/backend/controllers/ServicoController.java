@@ -5,6 +5,7 @@ import br.com.corteAqui.backend.dtos.response.CategoriaResponseDTO;
 import br.com.corteAqui.backend.dtos.response.ServicoResponseDTO;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.services.ServicosService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/servicos")
+@Tag(name = "Serviços", description = "Gerenciador de serviços do CorteAqui")
 public class ServicoController {
     @Autowired
     private ServicosService servicosService;

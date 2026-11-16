@@ -5,6 +5,7 @@ import br.com.corteAqui.backend.dtos.response.TokenJwtResponseDTO;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.services.AutenticacaoService;
 import br.com.corteAqui.backend.services.TokenJwtService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/autenticacao")
+@Tag(name = "Autenticação", description = "Espaço para receber a autenticação da conta de usuário")
 public class AutenticacaoController {
 
     @Autowired

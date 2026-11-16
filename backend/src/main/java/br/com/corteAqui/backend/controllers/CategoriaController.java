@@ -3,6 +3,7 @@ package br.com.corteAqui.backend.controllers;
 import br.com.corteAqui.backend.dtos.request.CategoriaRequestDTO;
 import br.com.corteAqui.backend.dtos.response.CategoriaResponseDTO;
 import br.com.corteAqui.backend.services.CategoriaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/categorias")
+@Tag(name = "Categoria", description = "Gerenciador de categorias do CorteAqui")
 public class CategoriaController {
 
     @Autowired
