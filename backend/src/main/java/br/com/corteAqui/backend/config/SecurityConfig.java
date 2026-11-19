@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 .requestMatchers("/categorias/**").hasAuthority("BARBEIRO")
                                 .requestMatchers("/servicos/**").hasAuthority("BARBEIRO")
                                 .requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers("/horarios/**").hasAuthority("BARBEIRO")
                                 .anyRequest().authenticated()
                         )
                 .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class)

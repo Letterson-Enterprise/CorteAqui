@@ -1,11 +1,14 @@
 package br.com.corteAqui.backend.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "tb_servicos")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Servicos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

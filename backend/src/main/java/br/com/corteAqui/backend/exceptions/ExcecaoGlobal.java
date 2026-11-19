@@ -44,4 +44,18 @@ public class ExcecaoGlobal {
         corpo.put(excecao.getMensagem(), excecao.getTipo());
         return ResponseEntity.badRequest().body(corpo);
     }
+
+    @ExceptionHandler(ExcecaoDataInvalida.class)
+    public ResponseEntity<Map<String, String>> dataInvalida(ExcecaoDataInvalida excecao) {
+        Map<String, String> corpo = new HashMap<>();
+        corpo.put(excecao.getMensagem(), excecao.getTipo());
+        return ResponseEntity.badRequest().body(corpo);
+    }
+
+    @ExceptionHandler(ExcecaoHoraInvalida.class)
+    public ResponseEntity<Map<String, String>> horaInvalida(ExcecaoHoraInvalida excecao) {
+        Map<String, String> corpo = new HashMap<>();
+        corpo.put(excecao.getMensagem(), excecao.getTipo());
+        return ResponseEntity.badRequest().body(corpo);
+    }
 }
