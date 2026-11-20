@@ -1,7 +1,6 @@
 package br.com.corteAqui.backend.controllers;
 
 import br.com.corteAqui.backend.dtos.request.ServicoRequestDTO;
-import br.com.corteAqui.backend.dtos.response.CategoriaResponseDTO;
 import br.com.corteAqui.backend.dtos.response.ServicoResponseDTO;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.services.ServicosService;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
