@@ -7,6 +7,7 @@ import br.com.corteAqui.backend.enums.StatusHorario;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +18,10 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
 
     Optional<Horario> findByIdAndBarbeiroId(Long id, Long barbeiroId);
 
-    boolean existsByBarbeiroIdAndDataHorarioAndHoraAndStatusHorarioNot(
+    boolean existsByBarbeiroIdAndDataHorarioAndHora(
             Long barbeiroId,
             LocalDate dataHorario,
-            Time hora,
-            StatusHorario statusHorario
+            LocalTime hora
     );
 
     List<Horario> findByBarbeiroIdAndStatusHorarioNot(

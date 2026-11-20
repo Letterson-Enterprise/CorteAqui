@@ -5,10 +5,10 @@ import lombok.*;
 
 @Entity
 @Table(name = "tb_servicos")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Servicos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -18,7 +19,7 @@ public class Horario {
     private Long id;
 
     @Column(nullable = false)
-    private Time hora;
+    private LocalTime hora;
 
     @Column(nullable = false)
     private LocalDate dataHorario;

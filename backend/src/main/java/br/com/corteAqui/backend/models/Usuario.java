@@ -1,7 +1,7 @@
 package br.com.corteAqui.backend.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +12,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_usuarios")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

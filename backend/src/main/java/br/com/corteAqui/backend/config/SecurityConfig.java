@@ -46,11 +46,7 @@ public class SecurityConfig {
                                 .requestMatchers("/categorias/**").hasAuthority("BARBEIRO")
                                 .requestMatchers("/servicos/**").hasAuthority("BARBEIRO")
                                 .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers(
-                                        "/swagger-ui/**",
-                                        "/swagger-ui.html",
-                                        "/v3/api-docs/**"
-                                ).permitAll()
+                                .requestMatchers("/horarios/**").hasAuthority("BARBEIRO")
                                 .anyRequest().authenticated()
                         )
                 .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class)
