@@ -1,7 +1,7 @@
 package br.com.corteAqui.backend.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.engine.internal.Cascade;
 
 import java.util.ArrayList;
@@ -9,7 +9,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_categorias")
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Categoria {
 
     @Id
@@ -22,6 +25,6 @@ public class Categoria {
     @Column(nullable = false)
     private String descricao;
 
-    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Servicos> servicos = new ArrayList<>();
 }

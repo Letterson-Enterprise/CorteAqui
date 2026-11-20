@@ -1,11 +1,14 @@
 package br.com.corteAqui.backend.services;
 
+import br.com.corteAqui.backend.dtos.request.ClienteRequestAtualizacaoDTO;
 import br.com.corteAqui.backend.dtos.request.ClienteRequestDTO;
+import br.com.corteAqui.backend.exceptions.RecursoNaoEncontradoExcecao;
 import br.com.corteAqui.backend.models.Cliente;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ClienteService {

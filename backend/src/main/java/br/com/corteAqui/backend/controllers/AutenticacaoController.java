@@ -5,6 +5,8 @@ import br.com.corteAqui.backend.dtos.response.TokenJwtResponseDTO;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.services.AutenticacaoService;
 import br.com.corteAqui.backend.services.TokenJwtService;
+import jakarta.validation.Valid;
+import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ public class AutenticacaoController {
     TokenJwtService tokenJwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenJwtResponseDTO> login(@RequestBody LoginRequestDTO corpoLogin) {
+    public ResponseEntity<TokenJwtResponseDTO> login(@RequestBody @Valid LoginRequestDTO corpoLogin) {
         autenticacaoService.vericarCamposValidos(corpoLogin.nomeUsuario(), corpoLogin.senha());
 
         UsernamePasswordAuthenticationToken usuarioESenha = new UsernamePasswordAuthenticationToken(corpoLogin.nomeUsuario(), corpoLogin.senha());
