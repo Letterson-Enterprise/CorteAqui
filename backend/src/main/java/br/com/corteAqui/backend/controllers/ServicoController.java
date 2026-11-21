@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping("/servicos")
 @Tag(name = "Serviços", description = "Gerenciador de serviços do CorteAqui")
 public class ServicoController {
+
     @Autowired
     private ServicosService servicosService;
 
