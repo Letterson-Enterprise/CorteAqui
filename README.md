@@ -136,27 +136,9 @@ Substitua os valores entre os sinais de menor e maior pelas informações do rep
 Instale e inicie o PostgreSQL. Após a implementação da aplicação, configure as credenciais de acesso e os parâmetros de conexão no back-end, utilizando as configurações definidas para o ambiente de execução.
 
 ### 2.1 Executar docker compose para Base de dados
+Caso seja preferido utilizar conteiners docker, essa seção irá deixar um link com a documentação necessaria para ser realizado a subida dos conteiners necessarios e acesso ao banco e ferramenta para manipulação dos dados.
 
-Caso não queira instalar e configurar uma base de dados postgreSQL, utilize o docker compose na raiz do projeto para ter uma base de dados postgreSQL e a ferramenta PgAdmin para banco de dados. Execute o comando abaixo na raiz do projeto.
-
-```bash
-docker compose up -d
-```
-
-### 2.2 Acessos para as aplicações vindas do docker
-1. Usuario do banco: postgres
-2. Senha do banco: 1234567
-3. E-mail para acesso ao PgAdmin: me@example.com
-4. Senha para acesso ao PgAdmin: 1234567
-5. Nome do banco de dados: CorteAquiDB
-
-### 2.3 Portas de funcionamento das aplicações vindas do docker
-
-1. PostgreSQL: 5433
-2. PgAdmin: 5050
-
-### 2.4 Acesso ao PgAdmin
-Configure a conexão do pgAdmin usando o host pg-docker e usar as credenciais e e portas mostradas.
+[Documentação para realizar subida e configurações necessarias para o acesso e manipulação do banco de dados](./artefatos/documentacao_banco_de_dados.md)
 
 ### 3. Executar o back-end
 
