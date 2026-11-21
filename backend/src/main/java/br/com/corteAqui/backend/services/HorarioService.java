@@ -55,6 +55,8 @@ public class HorarioService {
         horario.setStatusHorario(StatusHorario.DISPONIVEL);
 
         Horario salvo = horarioRepository.save(horario);
+
+        return converterParaDTO(salvo);
     }
 
     public List<HorarioResponseDTO> listarPorBarbeiro(Long idUsuarioLogado) {
@@ -155,6 +157,13 @@ public class HorarioService {
         );
     }
 
+    private void validarDataHora(LocalDate data, Time hora) {
+
+        if (data == null || hora == null) {
+            throw new DataHoraInvalidaException(
+                    "A data e a hora são obrigatórias."
+            );
+        }
 
     /**
      * @Description: Esse metodo irá verificar se um hora é anterior a hora atual do dia atual.
