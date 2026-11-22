@@ -5,8 +5,10 @@ import br.com.corteAqui.backend.dtos.response.TokenJwtResponseDTO;
 import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.services.AutenticacaoService;
 import br.com.corteAqui.backend.services.TokenJwtService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/autenticacao")
+@Tag(name = "Autenticação", description = "Espaço para permitir o acesso dos usuários a plataforma")
 public class AutenticacaoController {
 
     @Autowired
@@ -32,12 +35,14 @@ public class AutenticacaoController {
     TokenJwtService tokenJwtService;
 
     @PostMapping("/login")
+    @Operation(summary = "Login de usuário", description = "Espaço dedicado a entrada dos de usuário para receber o token de autenticação.")
+    @ApiResponse(responseCode = "201")
     public ResponseEntity<TokenJwtResponseDTO> login(@RequestBody @Valid LoginRequestDTO corpoLogin) {
-        autenticacaoService.vericarCamposValidos(corpoLogin.nomeUsuario(), corpoLogin.senha());
+        autenticacaoService.verificarCamposValidos(corpoLogin.nomeUsuario(), corpoLogin.senha());
 
         UsernamePasswordAuthenticationToken usuarioESenha = new UsernamePasswordAuthenticationToken(corpoLogin.nomeUsuario(), corpoLogin.senha());
         Authentication autenticacao = authenticationManager.authenticate(usuarioESenha);
-        String token = tokenJwtService.gerarToken((Usuario) autenticacao.getPrincipal());
+        String token = tokenJwtService.gerarToken((Usuario)autenticacao.getPrincipal());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new TokenJwtResponseDTO(token));
     }

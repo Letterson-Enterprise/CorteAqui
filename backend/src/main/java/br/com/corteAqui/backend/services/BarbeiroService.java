@@ -19,13 +19,13 @@ public class BarbeiroService {
     private UsuarioService usuarioService;
 
     public void cadastrarBarbeiro(BarbeiroRequestDTO barbeiro) {
-        Usuario novoUsuariobarbeiro = usuarioService.cadastrarUsuario(barbeiro.nomeUsuario(), barbeiro.senha(), barbeiro.email(), Long.valueOf(2));
+        Usuario novoUsuarioBarbeiro = usuarioService.cadastrarUsuario(barbeiro.nomeUsuario(), barbeiro.senha(), barbeiro.email(), Long.valueOf(2));
 
         Barbeiro novobarbeiro = new Barbeiro();
         novobarbeiro.setNome(barbeiro.nome());
         novobarbeiro.setSobreNome(barbeiro.sobreNome());
         novobarbeiro.setCpf(barbeiro.cpf());
-        novobarbeiro.setUsuario(novoUsuariobarbeiro);
+        novobarbeiro.setUsuario(novoUsuarioBarbeiro);
         barbeiroRepository.save(novobarbeiro);
     }
 

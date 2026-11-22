@@ -1,7 +1,5 @@
 package br.com.corteAqui.backend.dtos.request;
 
-import br.com.corteAqui.backend.models.Barbeiro;
-import br.com.corteAqui.backend.models.Categoria;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
