@@ -38,7 +38,7 @@ public class AutenticacaoController {
     @Operation(summary = "Login de usuário", description = "Espaço dedicado a entrada dos de usuário para receber o token de autenticação.")
     @ApiResponse(responseCode = "201")
     public ResponseEntity<TokenJwtResponseDTO> login(@RequestBody @Valid LoginRequestDTO corpoLogin) {
-        autenticacaoService.vericarCamposValidos(corpoLogin.nomeUsuario(), corpoLogin.senha());
+        autenticacaoService.verificarCamposValidos(corpoLogin.nomeUsuario(), corpoLogin.senha());
 
         UsernamePasswordAuthenticationToken usuarioESenha = new UsernamePasswordAuthenticationToken(corpoLogin.nomeUsuario(), corpoLogin.senha());
         Authentication autenticacao = authenticationManager.authenticate(usuarioESenha);

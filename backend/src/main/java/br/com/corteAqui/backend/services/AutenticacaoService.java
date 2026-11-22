@@ -19,7 +19,7 @@ public class AutenticacaoService implements UserDetailsService {
         return usuarioRepository.findByNomeUsuario(username).orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
     }
 
-    public void vericarCamposValidos(String nomeUsuario, String senha) {
+    public void verificarCamposValidos(String nomeUsuario, String senha) {
         if(nomeUsuario.isBlank() || senha.isBlank()) {
             throw new ExcecaoCamposInvalidos("Todos os campos devem ser preenchidos", "ERROR");
         }
