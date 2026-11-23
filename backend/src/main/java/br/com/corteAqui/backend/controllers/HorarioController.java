@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 @RestController
 @RequestMapping("/horarios")
 @Tag(name = "Horários", description = "Gerenciador de horários do CorteAqui")
