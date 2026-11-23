@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalTime;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +21,10 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
 
     Optional<Horario> findByIdAndBarbeiroId(Long id, Long barbeiroId);
 
-    boolean existsByBarbeiroIdAndDataHorarioAndHoraAndStatusHorarioNot(
+    boolean existsByBarbeiroIdAndDataHorarioAndHora(
             Long barbeiroId,
             LocalDate dataHorario,
-            LocalTime hora,
-            StatusHorario statusHorario
+            LocalTime hora
     );
 
     List<Horario> findByBarbeiroIdAndStatusHorarioNot(

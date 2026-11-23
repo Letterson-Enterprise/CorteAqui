@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.corteAqui.backend.enums.StatusAgendamento;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -73,7 +72,6 @@ public class HorarioService {
                 .stream()
                 .map(this::converterParaDTO)
                 .toList();
-    }
 
         if(todosHorarios.isEmpty()) {
             throw new ExcecaoListaVazia("Não há horarios cadastrados", "Lista de recursos vazia");
