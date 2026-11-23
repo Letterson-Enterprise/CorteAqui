@@ -8,7 +8,7 @@ import br.com.corteAqui.backend.enums.StatusAgendamento;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import java.sql.Time;
+import java.time.LocalTime;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
     boolean existsByBarbeiroIdAndDataHorarioAndHoraAndStatusHorarioNot(
             Long barbeiroId,
             LocalDate dataHorario,
-            Time hora,
+            LocalTime hora,
             StatusHorario statusHorario
     );
 
@@ -50,7 +50,7 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
 List<Horario> buscarDisponiveis(
         @Param("barbeiroId") Long barbeiroId,
         @Param("hoje") LocalDate hoje,
-        @Param("horaAtual") Time horaAtual,
+        @Param("horaAtual") LocalTime horaAtual,
         @Param("statusDisponivel") StatusHorario statusDisponivel,
         @Param("statusOcupados") List<StatusAgendamento> statusOcupados
 );
