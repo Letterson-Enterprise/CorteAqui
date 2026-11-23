@@ -55,7 +55,7 @@ public class HorarioService {
         horario.setHora(dados.hora());
         horario.setStatusHorario(StatusHorario.DISPONIVEL);
 
-        Horario salvo = horarioRepository.save(horario);
+        horarioRepository.save(horario);
     }
 
     public List<HorarioResponseDTO> listarPorBarbeiro(Long idUsuarioLogado) {
@@ -76,24 +76,20 @@ public class HorarioService {
     }
 
         if(todosHorarios.isEmpty()) {
-            throw new ExcecaoListaVazia("Não há horarios cadastrados", "Lista de recursos vazia");
+            throw new ExcecaoListaVazia("Não há horários cadastrados", "Lista de recursos vazia");
         }
 
         return todosHorarios;
     }
 
     public List<HorarioResponseDTO> listarDisponiveis(Long barbeiroId) {
-    
-        if (!barbeiroRepository.existsById(barbeiroId)) {
-            throw new RecursoNaoEncontradoExcecao("Barbeiro não encontrado.", "Error: Recurso não encontrado.");
-        }
 
-        LocalDateTime agora = LocalDateTime.now();
+        Barbeiro barbeiro = barbeiroService.buscarPorId(barbeiroId);
 
         return horarioRepository.buscarDisponiveis(
-                    barbeiroId,
+                    barbeiro.getId(),
                     LocalDate.now(),
-                    agora,
+                    LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
                     StatusHorario.DISPONIVEL,
                     List.of(StatusAgendamento.AGENDADO, StatusAgendamento.CONCLUIDO)
         )
@@ -159,9 +155,9 @@ public class HorarioService {
 
     private Horario buscarPorId(Long horarioId, Long idUsuarioLogado) {
 
-        Barbeiro barbeirobuscado = barbeiroService.encontrarBarbeiroPorUsuarioLogado(idUsuarioLogado);
+        Barbeiro barbeiroBuscado = barbeiroService.encontrarBarbeiroPorUsuarioLogado(idUsuarioLogado);
 
-        Horario horarioBuscado = horarioRepository.findByIdAndBarbeiroId(horarioId, barbeirobuscado.getId()).orElseThrow(() -> new RecursoNaoEncontradoExcecao(
+        Horario horarioBuscado = horarioRepository.findByIdAndBarbeiroId(horarioId, barbeiroBuscado.getId()).orElseThrow(() -> new RecursoNaoEncontradoExcecao(
                 "Horário não encontrado para esse barbeiro.", "Recurso não encontrado"
         ));
 
@@ -181,7 +177,7 @@ public class HorarioService {
 
 
     /**
-     * @Description: Esse metodo irá verificar se um hora é anterior a hora atual do dia atual.
+     * @Description: Esse método irá verificar se um hora é anterior a hora atual do dia atual.
      * Exemplo:
      * Data Atual - 2026-02-28
      * Hora Atual - 08:00
@@ -189,7 +185,7 @@ public class HorarioService {
      * Data De Entrada: 2026-02-28
      * Hora De Entrada: 07:00
      *
-     * O metodo irá retornar falso. Assim permitindo ser cadastrados horarios corretamente.
+     * O método irá retornar falso. Assim permitindo ser cadastrados horários corretamente.
      * @param dataHora
      * @param hora
      * @return boolean
