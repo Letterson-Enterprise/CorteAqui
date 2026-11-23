@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.corteAqui.backend.enums.StatusAgendamento;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -40,13 +39,13 @@ public class HorarioService {
                 );
 
         if (duplicado) {
-            throw new ExecaoInformacoesDuplicadas("Já existe um horário cadastrado nesse horário", "Informações duplicadas");
+            throw new ExecaoInformacoesDuplicadas("Já existe um horario cadastrado nesse horario", "Informações duplicadas");
         }
 
         boolean horaEAntesDaHoraAtual = verificarSeHoraEAntesDaHoraAtual(dados.dataHorario(), dados.hora());
 
         if(horaEAntesDaHoraAtual) {
-            throw new ExcecaoHoraInvalida("A hora não pode ser anterior a atual", "Error: Hora anterior a atual!");
+            throw new ExcecaoHoraInvalida("A hora não pode ser anterior a atural", "Error: Hora anterior a atual!");
         }
 
         Horario horario = new Horario();
@@ -73,7 +72,6 @@ public class HorarioService {
                 .stream()
                 .map(this::converterParaDTO)
                 .toList();
-    }
 
         if(todosHorarios.isEmpty()) {
             throw new ExcecaoListaVazia("Não há horários cadastrados", "Lista de recursos vazia");

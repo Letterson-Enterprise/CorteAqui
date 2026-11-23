@@ -16,15 +16,12 @@ import java.util.Optional;
 @Repository
 public interface HorarioRepository extends JpaRepository<Horario, Long> {
 
-    List<Horario> findByBarbeiroId(Long barbeiroId);
-
     Optional<Horario> findByIdAndBarbeiroId(Long id, Long barbeiroId);
 
-    boolean existsByBarbeiroIdAndDataHorarioAndHoraAndStatusHorarioNot(
+    boolean existsByBarbeiroIdAndDataHorarioAndHora(
             Long barbeiroId,
             LocalDate dataHorario,
-            LocalTime hora,
-            StatusHorario statusHorario
+            LocalTime hora
     );
 
     List<Horario> findByBarbeiroIdAndStatusHorarioNot(
