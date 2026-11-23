@@ -92,51 +92,24 @@ public class HorarioService {
                 .map(this::converterParaDTO)
                 .toList();
     }
-    public List<HorarioResponseDTO> listarDisponiveis(
-            Long barbeiroId, LocalDate dataInicio, LocalDate dataFim) {
-
-        if (dataInicio == null) {
-            throw new DataHoraInvalidaException("Informe a data inicial.");
-        }
-
-        LocalDate fim = dataFim != null ? dataFim : dataInicio;
-
-        if (fim.isBefore(dataInicio)) {
-            throw new DataHoraInvalidaException("A data final não pode ser anterior à data inicial.");
-        }
-
-        if (!barbeiroRepository.existsById(barbeiroId)) {
-            throw new BarbeiroNaoEncontradoException("Barbeiro não encontrado.");
-        }
-
-        LocalDateTime agora = LocalDateTime.now();
-        LocalDate hoje = agora.toLocalDate();
-
-        if (fim.isBefore(hoje)) {
-            return List.of();
-        }
-
-        LocalDate inicio = dataInicio.isBefore(hoje) ? hoje : dataInicio;
-
-        return horarioRepository.buscarDisponiveis(
-                        barbeiroId,
-                        inicio,
-                        fim,
-                        hoje,
-                        Time.valueOf(agora.toLocalTime()),
-                        StatusHorario.DISPONIVEL,
-                        List.of(StatusAgendamento.AGENDADO, StatusAgendamento.CONCLUIDO)
-                )
-                .stream()
-                .map(horario -> new HorarioResponseDTO(
-                        horario.getId(),
-                        horario.getDataHorario(),
-                        horario.getHora().toLocalTime(),
-                        StatusHorario.DISPONIVEL,
-                        barbeiroId
-                ))
-                .toList();
+   public List<HorarioResponseDTO> listarDisponiveis(Long barbeiroId) {
+    if (!barbeiroRepository.existsById(barbeiroId)) {
+        throw new BarbeiroNaoEncontradoException("Barbeiro não encontrado.");
     }
+
+    LocalDateTime agora = LocalDateTime.now();
+
+    return horarioRepository.buscarDisponiveis(
+                    barbeiroId,
+                    agora.toLocalDate(),
+                    Time.valueOf(agora.toLocalTime()),
+                    StatusHorario.DISPONIVEL,
+                    List.of(StatusAgendamento.AGENDADO, StatusAgendamento.CONCLUIDO)
+            )
+            .stream()
+            .map(this::converterParaDTO)
+            .toList();
+}
 
     public String editar(
             Long horarioId,

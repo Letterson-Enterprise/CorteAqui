@@ -32,32 +32,26 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
             StatusHorario statusHorario
     );
 
-    @Query("""
-            select h.id as id, h.dataHorario as dataHorario, h.hora as hora
-            from Horario h
-            where h.barbeiro.id = :barbeiroId
-              and h.statusHorario = :statusDisponivel
-              and h.dataHorario between :inicio and :fim
-              and (h.dataHorario > :hoje or h.hora > :horaAtual)
-              and not exists (
-                  select 1 from Agendamento a
-                  where a.horario.id = h.id and a.statusAgendamento in :statusOcupados
-              )
-            order by h.dataHorario, h.hora, h.id
-            """)
-    List<HorarioDisponivel> buscarDisponiveis(
-            @Param("barbeiroId") Long barbeiroId,
-            @Param("inicio") LocalDate inicio,
-            @Param("fim") LocalDate fim,
-            @Param("hoje") LocalDate hoje,
-            @Param("horaAtual") Time horaAtual,
-            @Param("statusDisponivel") StatusHorario statusDisponivel,
-            @Param("statusOcupados") List<StatusAgendamento> statusOcupados
-    );
-
-    interface HorarioDisponivel {
-        Long getId();
-        LocalDate getDataHorario();
-        Time getHora();
-    }
+   @Query("""
+        select h
+        from Horario h
+        where h.barbeiro.id = :barbeiroId
+          and h.statusHorario = :statusDisponivel
+          and (h.dataHorario > :hoje
+               or (h.dataHorario = :hoje and h.hora >= :horaAtual))
+          and not exists (
+              select 1
+              from Agendamento a
+              where a.horario.id = h.id
+                and a.statusAgendamento in :statusOcupados
+          )
+        order by h.dataHorario, h.hora, h.id
+        """)
+List<Horario> buscarDisponiveis(
+        @Param("barbeiroId") Long barbeiroId,
+        @Param("hoje") LocalDate hoje,
+        @Param("horaAtual") Time horaAtual,
+        @Param("statusDisponivel") StatusHorario statusDisponivel,
+        @Param("statusOcupados") List<StatusAgendamento> statusOcupados
+);
 }
