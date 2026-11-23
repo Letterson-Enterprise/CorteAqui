@@ -8,150 +8,134 @@ import br.com.corteAqui.backend.exceptions.*;
 import br.com.corteAqui.backend.models.Barbeiro;
 import br.com.corteAqui.backend.models.Horario;
 import br.com.corteAqui.backend.repositories.AgendamentoRepository;
-import br.com.corteAqui.backend.repositories.BarbeiroRepository;
 import br.com.corteAqui.backend.repositories.HorarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.corteAqui.backend.enums.StatusAgendamento;
-import java.time.LocalDateTime;
-import java.sql.Time;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class HorarioService {
 
-    private final HorarioRepository horarioRepository;
-    private final AgendamentoRepository agendamentoRepository;
-    private final BarbeiroRepository barbeiroRepository;
+    @Autowired
+    private HorarioRepository horarioRepository;
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
+    @Autowired
+    private BarbeiroService barbeiroService;
 
-    public HorarioResponseDTO cadastrar(HorarioRequestDTO dados) {
-
-        if (dados.barbeiroId() == null) {
-            throw new DadosInvalidosException(
-                    "Informe o ID do barbeiro."
-            );
-        }
-
-        if (dados.dataHorario() == null || dados.hora() == null) {
-            throw new DataHoraInvalidaException(
-                    "Informe a data e a hora do horário."
-            );
-        }
-
-        Barbeiro barbeiro = barbeiroRepository.findById(dados.barbeiroId())
-                .orElseThrow(() -> new BarbeiroNaoEncontradoException(
-                        "Barbeiro não encontrado."
-                ));
-
-        Time hora = Time.valueOf(dados.hora());
-
-        validarDataHora(dados.dataHorario(), hora);
+    public void cadastrar(HorarioRequestDTO dados, Long idUsuarioLogado) {
+        Barbeiro barbeiroBuscado = barbeiroService.encontrarBarbeiroPorUsuarioLogado(idUsuarioLogado);
 
         boolean duplicado =
-                horarioRepository.existsByBarbeiroIdAndDataHorarioAndHoraAndStatusHorarioNot(
-                        dados.barbeiroId(),
+                horarioRepository.existsByBarbeiroIdAndDataHorarioAndHora(
+                        barbeiroBuscado.getId(),
                         dados.dataHorario(),
-                        hora,
-                        StatusHorario.REMOVIDO
+                        dados.hora()
                 );
 
         if (duplicado) {
-            throw new HorarioDuplicadoException(
-                    "Já existe um horário para esse barbeiro nessa data e hora."
-            );
+            throw new ExecaoInformacoesDuplicadas("Já existe um horário cadastrado nesse horário", "Informações duplicadas");
+        }
+
+        boolean horaEAntesDaHoraAtual = verificarSeHoraEAntesDaHoraAtual(dados.dataHorario(), dados.hora());
+
+        if(horaEAntesDaHoraAtual) {
+            throw new ExcecaoHoraInvalida("A hora não pode ser anterior a atual", "Error: Hora anterior a atual!");
         }
 
         Horario horario = new Horario();
-        horario.setBarbeiro(barbeiro);
+        horario.setBarbeiro(barbeiroBuscado);
         horario.setDataHorario(dados.dataHorario());
-        horario.setHora(hora);
+        horario.setHora(dados.hora());
         horario.setStatusHorario(StatusHorario.DISPONIVEL);
 
         Horario salvo = horarioRepository.save(horario);
-
-        return converterParaDTO(salvo);
     }
 
-    public List<HorarioResponseDTO> listarPorBarbeiro(Long barbeiroId) {
+    public List<HorarioResponseDTO> listarPorBarbeiro(Long idUsuarioLogado) {
 
-        barbeiroRepository.findById(barbeiroId)
-                .orElseThrow(() -> new BarbeiroNaoEncontradoException(
-                        "Barbeiro não encontrado."
-                ));
+        Barbeiro barbeiroBuscado = barbeiroService.encontrarBarbeiroPorUsuarioLogado(idUsuarioLogado);
 
-        return horarioRepository.findByBarbeiroIdAndStatusHorarioNot(
-                        barbeiroId,
+        if(barbeiroBuscado == null) {
+            throw new RecursoNaoEncontradoExcecao("Barbeiro não encontrado", "Recurso não encontrado");
+        }
+
+        List<HorarioResponseDTO> todosHorarios =  horarioRepository.findByBarbeiroIdAndStatusHorarioNot(
+                        barbeiroBuscado.getId(),
                         StatusHorario.REMOVIDO
                 )
                 .stream()
                 .map(this::converterParaDTO)
                 .toList();
     }
-   public List<HorarioResponseDTO> listarDisponiveis(Long barbeiroId) {
-    if (!barbeiroRepository.existsById(barbeiroId)) {
-        throw new BarbeiroNaoEncontradoException("Barbeiro não encontrado.");
+
+        if(todosHorarios.isEmpty()) {
+            throw new ExcecaoListaVazia("Não há horarios cadastrados", "Lista de recursos vazia");
+        }
+
+        return todosHorarios;
     }
 
-    LocalDateTime agora = LocalDateTime.now();
+    public List<HorarioResponseDTO> listarDisponiveis(Long barbeiroId) {
+    
+        if (!barbeiroRepository.existsById(barbeiroId)) {
+            throw new RecursoNaoEncontradoExcecao("Barbeiro não encontrado.", "Error: Recurso não encontrado.");
+        }
 
-    return horarioRepository.buscarDisponiveis(
+        LocalDateTime agora = LocalDateTime.now();
+
+        return horarioRepository.buscarDisponiveis(
                     barbeiroId,
-                    agora.toLocalDate(),
-                    Time.valueOf(agora.toLocalTime()),
+                    LocalDate.now(),
+                    agora,
                     StatusHorario.DISPONIVEL,
                     List.of(StatusAgendamento.AGENDADO, StatusAgendamento.CONCLUIDO)
-            )
+        )
             .stream()
             .map(this::converterParaDTO)
             .toList();
-}
+    }
 
-    public String editar(
-            Long horarioId,
-            Long barbeiroId,
-            HorarioEdicaoRequestDTO dados
-    ) {
-        Horario horario = buscarPorId(horarioId, barbeiroId);
+    public void editar(Long horarioId, Long idUsuarioLogado, HorarioEdicaoRequestDTO dados) {
+      
+        Barbeiro barbeiroBuscado = barbeiroService.encontrarBarbeiroPorUsuarioLogado(idUsuarioLogado);
+      
+        Horario horario = buscarPorId(horarioId, barbeiroBuscado.getUsuario().getId());
 
-        if (horario.getStatusHorario() == StatusHorario.REMOVIDO) {
-            throw new HorarioNaoEncontradoException(
-                    "Esse horário já foi removido."
-            );
-        }
 
         LocalDate dataFinal = dados.dataHorario() != null
                 ? dados.dataHorario()
                 : horario.getDataHorario();
 
-        Time horaFinal = dados.hora() != null
-                ? Time.valueOf(dados.hora())
+        LocalTime horaFinal = dados.hora() != null
+                ? dados.hora()
                 : horario.getHora();
 
-        validarDataHora(dataFinal, horaFinal);
 
         boolean duplicado =
-                horarioRepository.existsByBarbeiroIdAndDataHorarioAndHoraAndStatusHorarioNot(
-                        barbeiroId,
+                horarioRepository.existsByBarbeiroIdAndDataHorarioAndHora(
+                        barbeiroBuscado.getId(),
                         dataFinal,
-                        horaFinal,
-                        StatusHorario.REMOVIDO
+                        horaFinal
                 );
 
-        if (duplicado
-                && (!dataFinal.equals(horario.getDataHorario())
-                || !horaFinal.equals(horario.getHora()))) {
-            throw new HorarioDuplicadoException(
-                    "Já existe outro horário para esse barbeiro nessa data e hora."
-            );
+        if (duplicado) {
+            throw new ExecaoInformacoesDuplicadas("Já existe horário para esse barbeiro nessa data e hora.", "Informações duplicadas");
         }
 
-        boolean possuiAgendamento =
-                agendamentoRepository.existsByHorarioId(horarioId);
+        boolean horaEAntesDaHoraAtual = verificarSeHoraEAntesDaHoraAtual(dados.dataHorario(), dados.hora());
+
+        if(horaEAntesDaHoraAtual) {
+            throw new ExcecaoHoraInvalida("A hora não pode ser anterior a atual!", "Error: Hora invalida");
+        }
+
+        boolean possuiAgendamento = agendamentoRepository.existsByHorarioId(horarioId);
 
         horario.setDataHorario(dataFinal);
         horario.setHora(horaFinal);
@@ -159,42 +143,29 @@ public class HorarioService {
         horarioRepository.save(horario);
 
         if (possuiAgendamento) {
-            return "Horário alterado com sucesso. O cliente deverá ser notificado para decidir se deseja manter ou cancelar o agendamento.";
+            System.out.println("Horário alterado com sucesso. O cliente deverá ser notificado para decidir se deseja manter ou cancelar o agendamento.");
         }
-
-        return "Horário alterado com sucesso.";
     }
 
-    public String excluir(Long horarioId, Long barbeiroId) {
-
-        Horario horario = buscarPorId(horarioId, barbeiroId);
-
-        if (horario.getStatusHorario() == StatusHorario.REMOVIDO) {
-            throw new HorarioNaoEncontradoException(
-                    "Esse horário já foi removido."
-            );
-        }
+    public void excluir(Long horarioId, Long idUsuarioLogado) {
+        Horario horario = buscarPorId(horarioId, idUsuarioLogado);
 
         if (agendamentoRepository.existsByHorarioId(horarioId)) {
-            horario.setStatusHorario(StatusHorario.REMOVIDO);
-            horarioRepository.save(horario);
-
-            return "Horário removido. O cliente deverá ser notificado para escolher outro horário.";
+            System.out.println("Horário removido. O cliente deverá ser notificado para escolher outro horário.");
         }
 
         horarioRepository.delete(horario);
-
-        return "Horário excluído com sucesso.";
     }
 
-    private Horario buscarPorId(Long horarioId, Long barbeiroId) {
+    private Horario buscarPorId(Long horarioId, Long idUsuarioLogado) {
 
-        return horarioRepository.findByIdAndBarbeiroId(
-                horarioId,
-                barbeiroId
-        ).orElseThrow(() -> new HorarioNaoEncontradoException(
-                "Horário não encontrado para esse barbeiro."
+        Barbeiro barbeirobuscado = barbeiroService.encontrarBarbeiroPorUsuarioLogado(idUsuarioLogado);
+
+        Horario horarioBuscado = horarioRepository.findByIdAndBarbeiroId(horarioId, barbeirobuscado.getId()).orElseThrow(() -> new RecursoNaoEncontradoExcecao(
+                "Horário não encontrado para esse barbeiro.", "Recurso não encontrado"
         ));
+
+        return horarioBuscado;
     }
 
     private HorarioResponseDTO converterParaDTO(Horario horario) {
@@ -202,34 +173,32 @@ public class HorarioService {
         return new HorarioResponseDTO(
                 horario.getId(),
                 horario.getDataHorario(),
-                horario.getHora().toLocalTime(),
+                horario.getHora(),
                 horario.getStatusHorario(),
                 horario.getBarbeiro().getId()
         );
     }
 
-    private void validarDataHora(LocalDate data, Time hora) {
 
-        if (data == null || hora == null) {
-            throw new DataHoraInvalidaException(
-                    "A data e a hora são obrigatórias."
-            );
-        }
+    /**
+     * @Description: Esse metodo irá verificar se um hora é anterior a hora atual do dia atual.
+     * Exemplo:
+     * Data Atual - 2026-02-28
+     * Hora Atual - 08:00
+     *
+     * Data De Entrada: 2026-02-28
+     * Hora De Entrada: 07:00
+     *
+     * O metodo irá retornar falso. Assim permitindo ser cadastrados horarios corretamente.
+     * @param dataHora
+     * @param hora
+     * @return boolean
+     */
+    private boolean verificarSeHoraEAntesDaHoraAtual(LocalDate dataHora, LocalTime hora) {
+      
+        if(LocalDate.now().isEqual(dataHora) && hora.isBefore(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))) return true;
 
-        LocalDate hoje = LocalDate.now();
-        LocalTime agora = LocalTime.now();
-
-        if (data.isBefore(hoje)) {
-            throw new DataHoraInvalidaException(
-                    "A data do horário não pode estar no passado."
-            );
-        }
-
-        if (data.isEqual(hoje)
-                && hora.toLocalTime().isBefore(agora)) {
-            throw new DataHoraInvalidaException(
-                    "A hora do horário não pode estar no passado."
-            );
-        }
+        return false;
     }
+
 }
