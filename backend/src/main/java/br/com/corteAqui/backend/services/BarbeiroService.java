@@ -35,11 +35,11 @@ public class BarbeiroService {
 
     public Barbeiro encontrarBarbeiroPorUsuarioLogado(Long idUsuarioLogado) {
         return barbeiroRepository.findByUsuarioId(idUsuarioLogado)
-                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Barbeiro não encontrado", "Recurso não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Barbeiro não encontrado", "ERROR: Recurso não encontrado."));
     }
 
     public Barbeiro buscarPorId(Long idBarbeiro) {
         return barbeiroRepository.findById(idBarbeiro)
-                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Barbeiro não encontrado", "Recurso não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Barbeiro não encontrado", "ERROR: Recurso não encontrado."));
     }
 }

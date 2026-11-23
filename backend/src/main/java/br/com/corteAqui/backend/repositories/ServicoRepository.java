@@ -14,7 +14,7 @@ public interface ServicoRepository extends JpaRepository<Servicos, Long> {
     boolean existsByNomeServico(String nomeServico);
 
     @Query("select s from Servicos s where s.id not in (?2) and s.nomeServico = ?1")
-    Servicos verficarSeNomeExisteEmOutraLinha(String nomeServico, Long id);
+    Servicos verificarSeNomeExisteEmOutraLinha(String nomeServico, Long id);
 
     @Query("select s from Servicos s where s.barbeiro.usuario.id = ?1")
     List<Servicos> listaDeServicosBarbeiro(Long id);

@@ -31,15 +31,15 @@ public class FiltroJwt extends OncePerRequestFilter {
         String token = recuperarToken(request);
         if(token != null) {
             String nomeUsuario = tokenJwtService.validarToken(token);
-            UserDetails usuario = usuarioRepository.findByNomeUsuario(nomeUsuario).orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
+            UserDetails usuario = usuarioRepository.findByNomeUsuario(nomeUsuario).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
             Authentication autenticacao = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(autenticacao);
         }
         filterChain.doFilter(request,response);
     }
 
-    private String recuperarToken(HttpServletRequest requsicao) {
-        String headerAutenticacao = requsicao.getHeader("Authorization");
+    private String recuperarToken(HttpServletRequest requisicao) {
+        String headerAutenticacao = requisicao.getHeader("Authorization");
         if(headerAutenticacao == null) return null;
 
         return headerAutenticacao.replace("Bearer ", "");

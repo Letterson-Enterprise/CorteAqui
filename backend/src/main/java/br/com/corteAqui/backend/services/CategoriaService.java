@@ -23,13 +23,13 @@ public class CategoriaService {
 
     public void cadastrarCategoria(CategoriaRequestDTO categoria) {
         if(categoria.nome().isBlank() || categoria.descricao().isBlank()) {
-            throw new ExcecaoCamposInvalidos("Todos os campos devem ser preenchidos", "ERROR");
+            throw new ExcecaoCamposInvalidos("Todos os campos devem ser preenchidos", "ERROR: Campos inválidos.");
         }
 
         boolean categoriaExistente = categoriaRepository.existsByNome(categoria.nome());
 
         if(categoriaExistente) {
-            throw new ExecaoInformacoesDuplicadas("Já existe uma categoria com esse nome", "Informações duplicacas");
+            throw new ExecaoInformacoesDuplicadas("Já existe uma categoria com esse nome", "ERROR: Informações duplicadas.");
         }
 
         Categoria novaCategoria = new Categoria();

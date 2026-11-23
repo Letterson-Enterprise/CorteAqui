@@ -4,10 +4,8 @@ import br.com.corteAqui.backend.exceptions.ErroExcecao;
 import br.com.corteAqui.backend.exceptions.RecursoNaoEncontradoExcecao;
 import br.com.corteAqui.backend.models.Cliente;
 import br.com.corteAqui.backend.models.Token;
-import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.repositories.ClienteRepository;
 import br.com.corteAqui.backend.repositories.TokenRepository;
-import br.com.corteAqui.backend.repositories.UsuarioRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +20,8 @@ public class TokenConfirmacaoService {
     private ClienteRepository clienteRepository;
 
     /**
-     * Metodo usado para gerar uma string aleatoria de 6 digitos.
-     * É usado o metodo nextAlphanumeric da classe RandomStringUtils
+     * Método usado para gerar uma string aleatória de 6 dígitos.
+     * É usado o método nextAlphanumeric da classe RandomStringUtils
      * da biblioteca Apache.commons.lang3.
      * Exemplo: fjipOW
      * @Autor: Jefferson Matheus
@@ -38,20 +36,21 @@ public class TokenConfirmacaoService {
      * Metodo utilizado para persistir o token de confirmação
      * gerado para o base de dados.
      * @Autor: Jefferson Matheus
-     * @Params: usuarioId, id do usuario que será usado gravar na base de dados.
+     * @Params: usuarioId, id do usuário que será usado gravar na base de dados.
      * @Return: void
      */
     public void persistirTokenBanco(Long usuarioId) throws ErroExcecao {
-        String tokenConfimacao = gerarTokenConfirmacao();
+        String tokenConfirmacao = gerarTokenConfirmacao();
 
         try {
-            Cliente clienteBuscado = clienteRepository.encontrarClientePeloUsuario(usuarioId).orElseThrow(() -> new RecursoNaoEncontradoExcecao("Usuario não encontrado.", "Recurso não encontrado"));
+            Cliente clienteBuscado = clienteRepository.encontrarClientePeloUsuario(usuarioId)
+                    .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Usuário não encontrado.", "ERROR: Recurso não encontrado."));
             Token token = new Token();
-            token.setToken(tokenConfimacao);
+            token.setToken(tokenConfirmacao);
             token.setCliente(clienteBuscado);
             tokenRepository.save(token);
         } catch (Exception e) {
-            throw new ErroExcecao("Erro interno do servidor ao persistir o token: " + e.getMessage(), "Erro interno do servidor.");
+            throw new ErroExcecao("Erro interno do servidor ao persistir o token: " + e.getMessage(), "ERROR: Erro interno do servidor.");
         }
     }
 }
