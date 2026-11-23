@@ -16,11 +16,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import br.com.corteAqui.backend.dtos.response.HorarioResponseDTO;
+import br.com.corteAqui.backend.services.HorarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/clientes")
 @Tag(name = "Clientes", description = "Gerenciador de clientes do CorteAqui")
 public class ClienteController {
+
+    @Autowired
+    private HorarioService horarioService;
 
     @Autowired
     private ClienteService clienteService;
@@ -53,5 +64,11 @@ public class ClienteController {
     public ResponseEntity<String> editarInformacoesUsuario(@AuthenticationPrincipal Usuario usuario, @RequestBody @Valid UsuarioRequestAtualizacaoDTO corpoUsuario) {
         usuarioService.atualizarUsuario(usuario.getId(), corpoUsuario.nomeUsuario());
         return ResponseEntity.ok("Usuário atualizado com sucesso.");
+    }
+    @GetMapping("/barbeiros/{barbeiroId}/horarios-disponiveis")
+    public ResponseEntity<List<HorarioResponseDTO>> listarHorariosDisponiveis(
+        @PathVariable Long barbeiroId) {
+
+    return ResponseEntity.ok(horarioService.listarDisponiveis(barbeiroId));
     }
 }

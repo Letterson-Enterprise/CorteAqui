@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(HttpMethod.POST, "/autenticacao/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/clientes").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/clientes/barbeiros/*/horarios-disponiveis")
+                                        .hasAuthority("CLIENTE")
                                 .requestMatchers("/clientes/**").hasAuthority("CLIENTE")
                                 .requestMatchers(HttpMethod.POST, "/barbeiro").permitAll()
                                 .requestMatchers("/categorias/**").hasAuthority("BARBEIRO")

@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/horarios")
@@ -42,16 +40,6 @@ public class HorarioController {
     @ApiResponse(responseCode = "200")
     public ResponseEntity<List<HorarioResponseDTO>> listarPorBarbeiro(@AuthenticationPrincipal Usuario usuarioLogado) {
         return ResponseEntity.ok(horarioService.listarPorBarbeiro(usuarioLogado.getId()));
-    }
-    @GetMapping("/barbeiro/{barbeiroId}/disponiveis")
-    public ResponseEntity<List<HorarioResponseDTO>> listarDisponiveis(
-            @PathVariable Long barbeiroId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
-
-        return ResponseEntity.ok(
-                horarioService.listarDisponiveis(barbeiroId, dataInicio, dataFim)
-        );
     }
 
     @PutMapping("/{horarioId}")
