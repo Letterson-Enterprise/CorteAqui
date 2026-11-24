@@ -11,13 +11,12 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface HorarioRepository extends JpaRepository<Horario, Long> {
-
-    List<Horario> findByBarbeiroId(Long barbeiroId);
 
     Optional<Horario> findByIdAndBarbeiroId(Long id, Long barbeiroId);
 

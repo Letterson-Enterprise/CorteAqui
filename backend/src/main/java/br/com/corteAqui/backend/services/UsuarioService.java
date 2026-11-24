@@ -37,7 +37,7 @@ public class UsuarioService {
         boolean emailExiste = emailService.verificarEmailExistente(email);
 
         if (usuarioExiste && emailExiste) {
-            throw new ExecaoInformacoesDuplicadas("Já existe um usuário com nome de usuario, email ou senha iguais", "ERROR");
+            throw new ExecaoInformacoesDuplicadas("Já existe um usuário com nome de usuário, email ou senha iguais", "ERROR: Informações duplicadas.");
         }
 
         novoUsuario = usuarioRepository.save(novoUsuario);
@@ -51,12 +51,12 @@ public class UsuarioService {
     public void atualizarUsuario(Long id, String nomeUsuario) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoExcecao(
-                        "Usuário não encontrado no sistema.", "ERROR"));
+                        "Usuário não encontrado no sistema.", "ERROR: Recurso não encontrado."));
 
         if (usuarioRepository.existsByNomeUsuario(nomeUsuario)
                 && !usuarioExistente.getNomeUsuario().equals(nomeUsuario)) {
             throw new ExecaoInformacoesDuplicadas(
-                    "Já existe um usuário com esse nome de usuário.", "ERROR");
+                    "Já existe um usuário com esse nome de usuário.", "ERROR: Informações duplicadas.");
         }
 
         usuarioExistente.setNomeUsuario(nomeUsuario);

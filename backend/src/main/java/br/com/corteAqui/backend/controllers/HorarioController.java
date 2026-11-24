@@ -7,6 +7,7 @@ import br.com.corteAqui.backend.models.Usuario;
 import br.com.corteAqui.backend.services.HorarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RestController
 @RequestMapping("/horarios")
 @Tag(name = "Horários", description = "Gerenciador de horários do CorteAqui")
+@SecurityRequirement(name = "bearer")
 public class HorarioController {
 
     @Autowired

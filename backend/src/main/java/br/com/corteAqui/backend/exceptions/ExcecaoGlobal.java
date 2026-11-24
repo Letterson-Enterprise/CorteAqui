@@ -60,4 +60,20 @@ public class ExcecaoGlobal {
         corpo.put(excecao.getMensagem(), excecao.getTipo());
         return ResponseEntity.badRequest().body(corpo);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> errosValidacao(MethodArgumentNotValidException excecao) {
+        Map<String, String> corpo = new HashMap<>();
+        excecao.getBindingResult().getFieldErrors().forEach(erros -> {
+            corpo.put(erros.getField(), erros.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(corpo);
+    }
+
+    @ExceptionHandler(ErroExcecao.class)
+    public ResponseEntity<Map<String, String>> erroInternoServidor(ErroExcecao excecao) {
+        Map<String, String> corpo = new HashMap<>();
+        corpo.put(excecao.getMensagem(), excecao.getTipo());
+        return ResponseEntity.internalServerError().body(corpo);
+    }
 }

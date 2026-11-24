@@ -36,7 +36,7 @@ public class SwaggerConfiguration {
                 .version("1.0.0")
                 .description("Documentação do CorteAqui API")
         ).addSecurityItem(new SecurityRequirement()
-                .addList("Barreira de Autenticação")
+                .addList("bearer")
         ).components(new Components()
                 .addSecuritySchemes("bearer",chaveAPIScheme())
         );

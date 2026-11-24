@@ -6,12 +6,8 @@ import br.com.corteAqui.backend.exceptions.*;
 import br.com.corteAqui.backend.models.Barbeiro;
 import br.com.corteAqui.backend.models.Categoria;
 import br.com.corteAqui.backend.models.Servicos;
-import br.com.corteAqui.backend.models.Usuario;
-import br.com.corteAqui.backend.repositories.BarbeiroRepository;
 import br.com.corteAqui.backend.repositories.ServicoRepository;
-import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +29,7 @@ public class ServicosService {
         boolean servicoExistente = servicoRepository.existsByNomeServico(novoServico.nomeServico());
 
         if(servicoExistente) {
-            throw new ExecaoInformacoesDuplicadas("Já existe um serviço com o mesmo nome", "Informações duplicadas");
+            throw new ExecaoInformacoesDuplicadas("Já existe um serviço com o mesmo nome", "ERROR: Informações duplicadas.");
         }
 
         Categoria categoriaBuscada = categoriaService.buscarCategoriaPorId(novoServico.idCategoria());
@@ -53,12 +49,13 @@ public class ServicosService {
 
     @Transactional(readOnly = true)
     public List<ServicoResponseDTO> listarTodosServicos(Long id) {
-        List<ServicoResponseDTO> todosServicos = servicoRepository.listaDeServicosBarbeiro(id).stream().map(this::converterEmServicoResponseDTO).toList();
+        List<ServicoResponseDTO> todosServicos = servicoRepository.listaDeServicosBarbeiro(id).
+                stream().map(this::converterEmServicoResponseDTO).toList();
 
         System.out.println(todosServicos);
         System.out.println(id);
         if(todosServicos.isEmpty()) {
-            throw new ExcecaoListaVazia("Não há serviços cadastrados", "Lista vazia");
+            throw new ExcecaoListaVazia("Não há serviços cadastrados", "ERROR: Lista vazia.");
         }
 
         return todosServicos;
@@ -70,10 +67,11 @@ public class ServicosService {
 
     public Servicos buscarServicoPorId(Long id, Long idBarbeiro) {
         if(id <= 0) {
-            throw new ExececaoNumerosInvalidos("Números negativos não são permitidos", "Números invalidso");
+            throw new ExececaoNumerosInvalidos("Números negativos não são permitidos", "ERROR: Números inválidos.");
         }
 
-        Servicos servicoBuscado = servicoRepository.encontrarServicoPorIdEBarbeiro(id, idBarbeiro).orElseThrow(() -> new RecursoNaoEncontradoExcecao("Serviço não encontrado", "Recurso não encontrado"));
+        Servicos servicoBuscado = servicoRepository.encontrarServicoPorIdEBarbeiro(id, idBarbeiro)
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Serviço não encontrado", "ERROR: Recurso não encontrado."));
 
         System.out.println(servicoBuscado);
 
@@ -83,11 +81,11 @@ public class ServicosService {
     public ServicoResponseDTO atualizarServico(ServicoRequestDTO novosDadosServico, Long id, Long idUsuarioLogado) {
         Servicos servicoBuscado = buscarServicoPorId(id, idUsuarioLogado);
 
-        Servicos servicoExistente = servicoRepository.verficarSeNomeExisteEmOutraLinha(novosDadosServico.nomeServico(), servicoBuscado.getId());
+        Servicos servicoExistente = servicoRepository.verificarSeNomeExisteEmOutraLinha(novosDadosServico.nomeServico(), servicoBuscado.getId());
 
 
         if(servicoExistente != null) {
-            throw new ExecaoInformacoesDuplicadas("Já existe um serviço com o mesmo nome", "Informações duplicadas");
+            throw new ExecaoInformacoesDuplicadas("Já existe um serviço com o mesmo nome", "ERROR: Informações duplicadas.");
         }
 
         servicoBuscado.setPreco(novosDadosServico.preco());
@@ -111,7 +109,7 @@ public class ServicosService {
         Servicos servicoBuscado = buscarServicoPorId(id, idUsuarioLogado);
 
         if(servicoBuscado == null) {
-            throw new RecursoNaoEncontradoExcecao("Serviço não encontrado", "Recurso não encontrado");
+            throw new RecursoNaoEncontradoExcecao("Serviço não encontrado", "ERROR: Recurso não encontrado.");
         }
 
         servicoRepository.deletarServicoPorId(id);

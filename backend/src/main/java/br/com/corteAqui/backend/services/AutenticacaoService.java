@@ -16,12 +16,12 @@ public class AutenticacaoService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return usuarioRepository.findByNomeUsuario(username).orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
+        return usuarioRepository.findByNomeUsuario(username).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
     }
 
     public void verificarCamposValidos(String nomeUsuario, String senha) {
         if(nomeUsuario.isBlank() || senha.isBlank()) {
-            throw new ExcecaoCamposInvalidos("Todos os campos devem ser preenchidos", "ERROR");
+            throw new ExcecaoCamposInvalidos("Todos os campos devem ser preenchidos", "ERROR: Campos inválidos.");
         }
     }
 }

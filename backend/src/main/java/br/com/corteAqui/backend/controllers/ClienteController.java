@@ -8,6 +8,7 @@ import br.com.corteAqui.backend.services.ClienteService;
 import br.com.corteAqui.backend.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class ClienteController {
     }
 
     @PutMapping("/editar/informacoes/cliente")
+    @SecurityRequirement(name = "bearer")
     @Operation(summary = "Atualizar cliente", description = "Atualiza-se as informações do cliente da sessão atual autenticada.")
     @ApiResponse(responseCode = "200")
     public ResponseEntity<String> atualizarCliente(@AuthenticationPrincipal Usuario usuario, @RequestBody @Valid ClienteRequestAtualizacaoDTO corpoCliente) {
@@ -56,6 +58,7 @@ public class ClienteController {
     }
 
     @PutMapping("/editar/informacoes/usuario")
+    @SecurityRequirement(name = "bearer")
     @Operation(summary = "Atualizar usuário", description = "Atualiza-se as informações do usuário da sessão atual autenticada.")
     @ApiResponse(responseCode = "200")
     public ResponseEntity<String> editarInformacoesUsuario(@AuthenticationPrincipal Usuario usuario, @RequestBody @Valid UsuarioRequestAtualizacaoDTO corpoUsuario) {

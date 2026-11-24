@@ -27,7 +27,7 @@ public class EnviadorEmailService {
 
             System.out.println("Email enviado com sucesso.");
         } catch (Exception e) {
-            System.out.println("Erro ao enviar o email: " + e.getMessage()); ;
+            System.out.println("Erro ao enviar o email: " + e.getMessage());
         }
     }
 }

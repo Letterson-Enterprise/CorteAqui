@@ -33,7 +33,7 @@ public class ClienteService {
     @Transactional
     public void atualizarCliente(Long id, ClienteRequestAtualizacaoDTO cliente) {
         Cliente clienteExistente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Cliente não encontrado no sistema.", "ERROR"));
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao("Cliente não encontrado no sistema.", "ERROR: Recurso não encontrado."));
 
         clienteExistente.setNome(cliente.nome());
         clienteExistente.setSobreNome(cliente.sobreNome());

@@ -12,6 +12,8 @@ public class PapelService {
     private PapelRepository papelRepository;
 
     public Papel encontrarPapel(Long id) {
-        return papelRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoExcecao("Papel não encontrado", "ERROR"));
+        return papelRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoExcecao(
+                "Papel não encontrado.", "ERROR: Recurso não encontrado."
+        ));
     }
 }
