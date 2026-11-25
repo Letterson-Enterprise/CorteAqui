@@ -19,7 +19,7 @@ Para verificar se os conteiners subiram, utilize o seguinte comando e espere uma
 docker ps
 ```
 
-![Saida listando conteiners](../imagens/Screenshot%20from%202026-11-21%2010-38-13.png)
+![Saida listando conteiners](...)
 
 ### 2.2 Acessos para as aplicações vindas do docker
 1. Usuario do banco: postgres
