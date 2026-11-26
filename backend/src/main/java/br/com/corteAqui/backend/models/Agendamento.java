@@ -2,11 +2,14 @@ package br.com.corteAqui.backend.models;
 
 import br.com.corteAqui.backend.enums.StatusAgendamento;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "tb_agendamentos")
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

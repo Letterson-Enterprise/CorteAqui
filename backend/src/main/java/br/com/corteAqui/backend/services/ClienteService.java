@@ -40,4 +40,8 @@ public class ClienteService {
 
         clienteRepository.save(clienteExistente);
     }
+
+    public Cliente buscarClientePorUsuarioLogado(Long id) {
+        return clienteRepository.encontrarClientePeloUsuario(id).orElseThrow(() -> new RecursoNaoEncontradoExcecao("Cliente não encontrado no sistema.", "ERROR: Recurso não encontrado."));
+    }
 }
