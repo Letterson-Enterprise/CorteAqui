@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-    @Query("SELECT c FROM Cliente c JOIN Usuario u ON c.usuario.id = u.id WHERE c.id = ?1")
+    @Query("SELECT c FROM Cliente c JOIN Usuario u ON c.usuario.id = u.id WHERE c.usuario.id = ?1")
     Optional<Cliente> encontrarClientePeloUsuario(Long id);
 }
 

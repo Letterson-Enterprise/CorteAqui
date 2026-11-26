@@ -1,5 +1,6 @@
 package br.com.corteAqui.backend.repositories;
 
+import br.com.corteAqui.backend.enums.StatusAgendamento;
 import br.com.corteAqui.backend.models.Agendamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
     boolean existsByHorarioId(Long horarioId);
+
+    boolean existsByClienteIdAndStatusAgendamento(Long idCliente, StatusAgendamento statusAgendamento);
 }

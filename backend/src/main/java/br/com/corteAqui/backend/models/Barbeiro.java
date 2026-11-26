@@ -2,14 +2,17 @@ package br.com.corteAqui.backend.models;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_barbeiros")
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Barbeiro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
