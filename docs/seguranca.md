@@ -48,11 +48,10 @@ O papel é uma entidade (`Papel`) que implementa `GrantedAuthority`. Cada usuár
 | `GET /horarios` | Listar horários do barbeiro logado | `BARBEIRO` | Barbeiro / `Horario` |
 | `PUT /horarios/{horarioId}` | Editar horário | `BARBEIRO` | Barbeiro / `Horario` |
 | `DELETE /horarios/{horarioId}` | Excluir horário | `BARBEIRO` | Barbeiro / `Horario` |
-| `POST /teste` | Persistir token de confirmação | Qualquer usuário autenticado | Usuário (`TesteController`) |
 | `/h2-console/**` | Console H2 | Público (`permitAll`) | Infraestrutura |
 | `/swagger-ui/**`, `/swagger-ui.html`, `/v3/api-docs/**` | Documentação Swagger | Público (`permitAll`) | Infraestrutura |
 
-## 433 Como as restrições estão sendo aplicadas
+## 3.3 Como as restrições estão sendo aplicadas
 
 A autorização é feita exclusivamente por URL em `SecurityConfig`, por meio de `authorizeHttpRequests` com `requestMatchers(...)`. Não há `@EnableMethodSecurity`, `@PreAuthorize`, `@Secured` ou `@RolesAllowed` em nenhum controller; portanto, a proteção dos endpoints depende da configuração do `SecurityFilterChain`, e não de anotações nos métodos.
 
@@ -62,7 +61,6 @@ O fluxo de autenticação e autorização ocorre da seguinte forma:
 2. Em cada requisição, o `FiltroJwt` lê o header `Authorization: Bearer <token>`, valida o token, busca o `Usuario` no banco e monta um `UsernamePasswordAuthenticationToken` com as authorities do usuário.
 3. As authorities vêm de `Usuario.getAuthorities()`, que retorna o `Papel` associado ao usuário.
 4. O `SecurityConfig` compara essas authorities com `hasAuthority("CLIENTE")` e `hasAuthority("BARBEIRO")`. Como `Papel.getAuthority()` devolve exatamente `CLIENTE` ou `BARBEIRO`, o match funciona.
-5. Rotas não listadas explicitamente caem em `anyRequest().authenticated()`, exigindo apenas um usuário autenticado, sem exigir papel específico. É o caso de `POST /teste`.
 
 ## 4 Observações importantes
 
