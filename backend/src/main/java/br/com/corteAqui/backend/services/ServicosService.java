@@ -119,9 +119,4 @@ public class ServicosService {
         Servicos servicoBuscado = buscarServicoPorId(id, idUsuarioLogado);
         return converterEmServicoResponseDTO(servicoBuscado);
     }
-
-
-    public Servicos buscarServicoPorId(Long id) {
-        return servicoRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoExcecao("Serviço não encontrado", "ERRO: Recurso não encontrado!"));
-    }
 }

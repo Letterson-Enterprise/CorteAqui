@@ -196,9 +196,4 @@ public class HorarioService {
         return false;
     }
 
-
-    public Horario buscarPorId(Long id) {
-        return horarioRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoExcecao("Horario não encontrado.", "ERRO: Recurso não encontrado!"));
-    }
-
 }
