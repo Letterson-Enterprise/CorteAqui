@@ -1,0 +1,35 @@
+<app-barra-navegacao (alternar)="alternarMenu()" />
+
+<mat-sidenav-container class="conteudo">
+  <mat-sidenav [opened]="menuAberto()" mode="side" class="menu">
+    <mat-nav-list>
+      <a
+        mat-list-item
+        routerLink="/barbeiro/painel"
+        routerLinkActive="ativo"
+        [routerLinkActiveOptions]="{ exact: false }"
+      >
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Painel</span>
+      </a>
+      <a mat-list-item routerLink="/barbeiro/categorias" routerLinkActive="ativo">
+        <mat-icon matListItemIcon>category</mat-icon>
+        <span matListItemTitle>Categorias</span>
+      </a>
+      <a mat-list-item routerLink="/barbeiro/servicos" routerLinkActive="ativo">
+        <mat-icon matListItemIcon>design_services</mat-icon>
+        <span matListItemTitle>Serviços</span>
+      </a>
+      <a mat-list-item routerLink="/barbeiro/horarios" routerLinkActive="ativo">
+        <mat-icon matListItemIcon>schedule</mat-icon>
+        <span matListItemTitle>Horários</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="pagina">
+    <div class="conteudo-pagina">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

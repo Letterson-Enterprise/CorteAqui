@@ -1,0 +1,61 @@
+<section class="pagina">
+  <header class="cabecalho">
+    <div>
+      <h1>Serviços</h1>
+      <p>Cadastre os serviços oferecidos e seus preços.</p>
+    </div>
+    <button mat-flat-button color="primary" type="button" (click)="abrirNova()">
+      <mat-icon>add</mat-icon>
+      Novo serviço
+    </button>
+  </header>
+
+  <mat-card appearance="outlined">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <mat-card-content>
+      @if (!carregando() && servicos().length === 0) {
+        <p class="vazio">Nenhum serviço cadastrado.</p>
+      } @else {
+        <table mat-table [dataSource]="servicos()" class="tabela">
+          <ng-container matColumnDef="nomeServico">
+            <th mat-header-cell *matHeaderCellDef>Serviço</th>
+            <td mat-cell *matCellDef="let servico">{{ servico.nomeServico }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="preco">
+            <th mat-header-cell *matHeaderCellDef>Preço</th>
+            <td mat-cell *matCellDef="let servico">{{ servico.preco | currency: 'BRL' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef class="acoes">Ações</th>
+            <td mat-cell *matCellDef="let servico" class="acoes">
+              <button
+                mat-icon-button
+                type="button"
+                aria-label="Editar serviço"
+                (click)="editar(servico)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                aria-label="Excluir serviço"
+                (click)="excluir(servico)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+          <tr mat-row *matRowDef="let linha; columns: colunas"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+</section>

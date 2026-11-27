@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.conteudo {
+  flex: 1 1 auto;
+  background: var(--mat-sys-surface-container-low);
+}
+
+.menu {
+  width: 240px;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+.menu .ativo {
+  background: var(--mat-sys-secondary-container);
+}
+
+.pagina {
+  padding: 1.5rem;
+}
+
+.conteudo-pagina {
+  max-width: 1100px;
+  margin: 0 auto;
+}

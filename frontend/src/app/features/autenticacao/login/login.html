@@ -1,0 +1,77 @@
+<div class="tela-login">
+  <mat-card class="cartao" appearance="outlined">
+    <mat-card-header>
+      <div class="marca">
+        <mat-icon aria-hidden="true">content_cut</mat-icon>
+        <div>
+          <h1>Corte Aqui</h1>
+          <p>Agende seu atendimento de forma simples.</p>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p class="rotulo">Entrar como</p>
+      <mat-button-toggle-group
+        class="grupo-papel"
+        [value]="papelSelecionado()"
+        (change)="aoMudarPapel($event)"
+      >
+        <mat-button-toggle value="CLIENTE">
+          <mat-icon>person</mat-icon>
+          Cliente
+        </mat-button-toggle>
+        <mat-button-toggle value="BARBEIRO">
+          <mat-icon>content_cut</mat-icon>
+          Barbeiro
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <p class="dica-papel">Selecione o mesmo perfil usado no seu cadastro.</p>
+
+      <form class="formulario" [formGroup]="formulario" (ngSubmit)="entrar()">
+        <mat-form-field appearance="outline">
+          <mat-label>Nome de usuário</mat-label>
+          <input matInput formControlName="nomeUsuario" autocomplete="username" />
+          @if (formulario.controls.nomeUsuario.hasError('required')) {
+            <mat-error>Informe o nome de usuário.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Senha</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="senha"
+            autocomplete="current-password"
+          />
+          @if (formulario.controls.senha.hasError('required')) {
+            <mat-error>Informe a senha.</mat-error>
+          }
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="botao-entrar"
+          [disabled]="carregando()"
+        >
+          @if (carregando()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            Entrar
+          }
+        </button>
+      </form>
+
+      <mat-divider />
+
+      <div class="cadastros">
+        <span>Ainda não tem conta?</span>
+        <a mat-button routerLink="/cadastro/cliente">Cadastrar como cliente</a>
+        <a mat-button routerLink="/cadastro/barbeiro">Cadastrar como barbeiro</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

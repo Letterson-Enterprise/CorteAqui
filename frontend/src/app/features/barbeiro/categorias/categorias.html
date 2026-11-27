@@ -1,0 +1,61 @@
+<section class="pagina">
+  <header class="cabecalho">
+    <div>
+      <h1>Categorias</h1>
+      <p>Organize os serviços por tipo de atendimento.</p>
+    </div>
+    <button mat-flat-button color="primary" type="button" (click)="abrirNova()">
+      <mat-icon>add</mat-icon>
+      Nova categoria
+    </button>
+  </header>
+
+  <mat-card appearance="outlined">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <mat-card-content>
+      @if (!carregando() && categorias().length === 0) {
+        <p class="vazio">Nenhuma categoria cadastrada.</p>
+      } @else {
+        <table mat-table [dataSource]="categorias()" class="tabela">
+          <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef>Nome</th>
+            <td mat-cell *matCellDef="let categoria">{{ categoria.nome }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="descricao">
+            <th mat-header-cell *matHeaderCellDef>Descrição</th>
+            <td mat-cell *matCellDef="let categoria">{{ categoria.descricao }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef class="acoes">Ações</th>
+            <td mat-cell *matCellDef="let categoria" class="acoes">
+              <button
+                mat-icon-button
+                type="button"
+                aria-label="Editar categoria"
+                (click)="editar(categoria)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                aria-label="Excluir categoria"
+                (click)="excluir(categoria)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+          <tr mat-row *matRowDef="let linha; columns: colunas"></tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+</section>

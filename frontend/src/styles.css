@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+/* Estilos globais do Corte Aqui */
+
+.snack-erro {
+  --mdc-snackbar-container-color: var(--mat-sys-error-container);
+  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-error-container);
+  --mdc-snackbar-action-color: var(--mat-sys-on-error-container);
+}

@@ -1,0 +1,79 @@
+<section class="pagina">
+  <header class="cabecalho">
+    <div>
+      <h1>Agendar atendimento</h1>
+      <p>Escolha um horário disponível e confirme o agendamento.</p>
+    </div>
+  </header>
+
+  <mat-card appearance="outlined" class="resumo">
+    <mat-card-content>
+      <div class="resumo-linha">
+        <mat-icon>storefront</mat-icon>
+        <span>Barbeiro #{{ barbeiroId() }}</span>
+        <mat-icon>design_services</mat-icon>
+        <span>Serviço #{{ servicoId() }}</span>
+        <a mat-button routerLink="/cliente/configuracoes">
+          <mat-icon>settings</mat-icon>
+          Alterar
+        </a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <mat-card-content>
+      @if (!carregando() && dias().length === 0) {
+        <p class="vazio">Nenhum horário disponível para este barbeiro.</p>
+      } @else {
+        @for (dia of dias(); track dia.data) {
+          <div class="dia">
+            <h3>{{ formatarData(dia.data) }}</h3>
+            <div class="slots">
+              @for (horario of dia.horarios; track horario.id) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="slot"
+                  [class.selecionado]="horarioSelecionado()?.id === horario.id"
+                  (click)="selecionar(horario)"
+                >
+                  {{ formatarHora(horario.hora) }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+
+  @if (horarioSelecionado(); as selecionado) {
+    <mat-card appearance="outlined" class="confirmacao">
+      <mat-card-content>
+        <div class="confirmacao-conteudo">
+          <div>
+            <span class="rotulo">Horário selecionado</span>
+            <strong>
+              {{ formatarData(selecionado.dataHorario) }} às
+              {{ formatarHora(selecionado.hora) }}
+            </strong>
+          </div>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            [disabled]="enviando()"
+            (click)="confirmar()"
+          >
+            Confirmar agendamento
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>

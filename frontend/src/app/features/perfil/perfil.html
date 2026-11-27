@@ -1,0 +1,68 @@
+<section class="pagina">
+  <header class="cabecalho">
+    <div>
+      <h1>Meu perfil</h1>
+      <p>Atualize seus dados pessoais e nome de usuário.</p>
+    </div>
+  </header>
+
+  <div class="aviso">
+    <mat-icon>info</mat-icon>
+    <p>
+      A API atual não permite consultar os dados do perfil. Por isso, os campos abaixo começam
+      vazios: preencha com os novos valores que deseja salvar.
+    </p>
+  </div>
+
+  <div class="cartoes">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Dados pessoais</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="formulario" [formGroup]="formularioDados" (ngSubmit)="salvarDados()">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="nome" />
+            @if (formularioDados.controls.nome.hasError('required')) {
+              <mat-error>Informe o nome.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Sobrenome</mat-label>
+            <input matInput formControlName="sobreNome" />
+            @if (formularioDados.controls.sobreNome.hasError('required')) {
+              <mat-error>Informe o sobrenome.</mat-error>
+            }
+          </mat-form-field>
+
+          <button mat-flat-button color="primary" type="submit" [disabled]="salvandoDados()">
+            Salvar dados
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Nome de usuário</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="formulario" [formGroup]="formularioUsuario" (ngSubmit)="salvarUsuario()">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome de usuário</mat-label>
+            <input matInput formControlName="nomeUsuario" autocomplete="username" />
+            @if (formularioUsuario.controls.nomeUsuario.hasError('required')) {
+              <mat-error>Informe o nome de usuário.</mat-error>
+            }
+          </mat-form-field>
+
+          <button mat-flat-button color="primary" type="submit" [disabled]="salvandoUsuario()">
+            Salvar usuário
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

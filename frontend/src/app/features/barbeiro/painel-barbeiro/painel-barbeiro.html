@@ -1,0 +1,64 @@
+<section class="painel">
+  <header class="cabecalho">
+    <div>
+      <h1>Painel do barbeiro</h1>
+      <p>Resumo da sua operação no Corte Aqui.</p>
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  <div class="indicadores">
+    <mat-card appearance="outlined" class="indicador">
+      <mat-icon>category</mat-icon>
+      <div>
+        <span class="valor">{{ totalCategorias() }}</span>
+        <span class="rotulo">Categorias</span>
+      </div>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="indicador">
+      <mat-icon>design_services</mat-icon>
+      <div>
+        <span class="valor">{{ totalServicos() }}</span>
+        <span class="rotulo">Serviços</span>
+      </div>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="indicador">
+      <mat-icon>schedule</mat-icon>
+      <div>
+        <span class="valor">{{ proximosHorarios().length }}</span>
+        <span class="rotulo">Próximos horários</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-card appearance="outlined" class="agenda">
+    <mat-card-header>
+      <mat-card-title>Próximos horários</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (proximosHorarios().length === 0) {
+        <p class="vazio">Nenhum horário cadastrado ainda.</p>
+      } @else {
+        <ul class="lista-horarios">
+          @for (horario of proximosHorarios(); track horario.id) {
+            <li>
+              <div class="data-hora">
+                <mat-icon>event</mat-icon>
+                <span>{{ horario.dataHorario | date: 'dd/MM/yyyy' }}</span>
+                <span class="hora">{{ horario.hora.slice(0, 5) }}</span>
+              </div>
+              <span [class]="'status status-' + horario.statusHorario.toLowerCase()">
+                {{ horario.statusHorario }}
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </mat-card-content>
+  </mat-card>
+</section>

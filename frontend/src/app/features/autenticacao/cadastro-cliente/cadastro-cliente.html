@@ -1,0 +1,108 @@
+<div class="tela-cadastro">
+  <mat-card class="cartao" appearance="outlined">
+    <mat-card-header>
+      <div class="cabecalho">
+        <mat-icon aria-hidden="true">person_add</mat-icon>
+        <div>
+          <h1>Cadastro de cliente</h1>
+          <p>Preencha os dados para criar sua conta.</p>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="formulario" [formGroup]="formulario" (ngSubmit)="cadastrar()">
+        <div class="linha">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="nome" />
+            @if (formulario.controls.nome.hasError('required')) {
+              <mat-error>Informe o nome.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Sobrenome</mat-label>
+            <input matInput formControlName="sobreNome" />
+            @if (formulario.controls.sobreNome.hasError('required')) {
+              <mat-error>Informe o sobrenome.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nome de usuário</mat-label>
+          <input matInput formControlName="nomeUsuario" autocomplete="username" />
+          @if (formulario.controls.nomeUsuario.hasError('required')) {
+            <mat-error>Informe o nome de usuário.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="email" formControlName="email" autocomplete="email" />
+          @if (formulario.controls.email.hasError('required')) {
+            <mat-error>Informe o e-mail.</mat-error>
+          } @else if (formulario.controls.email.hasError('email')) {
+            <mat-error>Formato de e-mail inválido.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="linha">
+          <mat-form-field appearance="outline">
+            <mat-label>Senha</mat-label>
+            <input matInput type="password" formControlName="senha" autocomplete="new-password" />
+            @if (formulario.controls.senha.hasError('required')) {
+              <mat-error>Informe a senha.</mat-error>
+            } @else if (
+              formulario.controls.senha.hasError('minlength') ||
+              formulario.controls.senha.hasError('pattern')
+            ) {
+              <mat-error>Senha fraca.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Confirmar senha</mat-label>
+            <input
+              matInput
+              type="password"
+              formControlName="confirmarSenha"
+              autocomplete="new-password"
+            />
+            @if (formulario.controls.confirmarSenha.hasError('required')) {
+              <mat-error>Confirme a senha.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <p class="dica">
+          A senha deve ter ao menos 8 caracteres, uma letra maiúscula, um número e um caractere
+          especial.
+        </p>
+
+        @if (formulario.hasError('senhasDiferentes')) {
+          <p class="erro">As senhas não conferem.</p>
+        }
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="botao-cadastrar"
+          [disabled]="carregando()"
+        >
+          @if (carregando()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            Criar conta
+          }
+        </button>
+      </form>
+
+      <div class="rodape">
+        <a mat-button routerLink="/entrar">Já tenho conta</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

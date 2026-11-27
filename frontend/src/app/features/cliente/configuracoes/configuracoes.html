@@ -1,0 +1,42 @@
+<section class="pagina">
+  <header class="cabecalho">
+    <div>
+      <h1>Configurações do protótipo</h1>
+      <p>Defina os identificadores usados para consultar horários e agendar.</p>
+    </div>
+  </header>
+
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <div class="aviso">
+        <mat-icon>info</mat-icon>
+        <p>
+          A API atual não expõe a listagem de barbeiros nem de serviços para o cliente. Por isso,
+          informe manualmente o identificador do barbeiro e do serviço desejados.
+        </p>
+      </div>
+
+      <form class="formulario" [formGroup]="formulario" (ngSubmit)="salvar()">
+        <div class="linha">
+          <mat-form-field appearance="outline">
+            <mat-label>ID do barbeiro</mat-label>
+            <input matInput type="number" min="1" formControlName="barbeiroId" />
+            @if (formulario.controls.barbeiroId.hasError('required') || formulario.controls.barbeiroId.hasError('min')) {
+              <mat-error>Informe um ID válido.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>ID do serviço</mat-label>
+            <input matInput type="number" min="1" formControlName="servicoId" />
+            @if (formulario.controls.servicoId.hasError('required') || formulario.controls.servicoId.hasError('min')) {
+              <mat-error>Informe um ID válido.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit">Salvar configurações</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

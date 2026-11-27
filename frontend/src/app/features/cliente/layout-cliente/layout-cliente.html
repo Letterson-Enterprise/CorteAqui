@@ -1,0 +1,26 @@
+<app-barra-navegacao (alternar)="alternarMenu()" />
+
+<mat-sidenav-container class="conteudo">
+  <mat-sidenav [opened]="menuAberto()" mode="side" class="menu">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/cliente/agendar" routerLinkActive="ativo">
+        <mat-icon matListItemIcon>event_available</mat-icon>
+        <span matListItemTitle>Agendar</span>
+      </a>
+      <a mat-list-item routerLink="/cliente/configuracoes" routerLinkActive="ativo">
+        <mat-icon matListItemIcon>settings</mat-icon>
+        <span matListItemTitle>Configurações</span>
+      </a>
+      <a mat-list-item routerLink="/cliente/perfil" routerLinkActive="ativo">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span matListItemTitle>Perfil</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="pagina">
+    <div class="conteudo-pagina">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
